@@ -1,0 +1,1226 @@
+= Next.js KnowHow
+
+* https://www.udemy.com/course/awesome-nextjs-with-react-and-node-amazing-portfolio-app/[Complete Next.js with React & Node - Beautiful Portfolio App]
+** https://github.com/Jerga99/movie-app-course[movie-app-course]
+* https://nextjs.org/docs/getting-started[next.js docs]
+* https://ja.reactjs.org/docs/getting-started.html[react docs]
+* https://jsprimer.net/[JavaScript Primer 迷わないための入門書]
+
+== movie-app-course のディレクトリ構成
+
+[source,bash]
+----
+$ tree --charset unicode -I node_modules
+.
+|-- README.adoc
+|-- actions
+|   `-- index.js
+|-- components
+|   |-- carousel.js // <1>
+|   |-- footer.js
+|   |-- modal.js
+|   |-- movieCreateForm.js
+|   |-- movieList.js
+|   |-- navbar.js
+|   `-- sideMenu.js
+|-- next.config.js
+|-- package-lock.json
+|-- package.json
+|-- pages
+|   |-- _app.js
+|   |-- about.js
+|   |-- api
+|   |   `-- v1
+|   |       `-- posts.js
+|   |-- contact.js
+|   |-- index.js
+|   |-- movies
+|   |   `-- [id]
+|   |       |-- edit.js
+|   |       `-- index.js
+|   |-- posts.js
+|   `-- services.js
+|-- resources
+|   |-- 1_data.js
+|   |-- 2_create_form.js
+|   |-- 3_server.js
+|   `-- 4_data.json
+|-- server
+|   |-- data.json
+|   `-- index.js
+|-- static
+|   `-- favicon.ico
+`-- styles
+    `-- index.scss
+
+11 directories, 29 files
+----
+<1> carousel は回転木馬。しいてはスライドしながら画像表示するやつ
+
+== 初期化
+
+[source,bash]
+----
+npx create-next-app lean-nextjs-movie-app
+----
+
+== functional component
+
+[source,javascript]
+.functional component - arrow function - 1
+----
+const About = () => ( // <1>
+  <h1>Hello About Page</h1>
+)
+----
+<1> この書き方の場合は内部で変数宣言ができない
+
+[source,javascript]
+.functional component - arrow function - 2
+----
+const About = () => {
+  const message = 'Hello World'
+  return (
+    <h1>Hello About Page - {message}</h1>
+  )
+}
+----
+
+[source,javascript]
+.functional component - arrow function - 3
+----
+const About = () => {
+  const message = 'Hello World'
+  return React.createElement('h1', null, 'I am genereting this with createElement')
+}
+----
+
+[source,javascript]
+.unctional component - normal function
+----
+function About() {
+  return (
+    <h1>Hello About Page</h1>
+  )
+}
+----
+
+functional component の使いどころは次のようなケース。
+
+* 小さいコンポーネント
+* 再利用可能なコンポーネント
+* presentional components , patialy right, we can use HOOKS and specify state(UI 的なコンポーネント？)
+
+== class component
+
+[source,javascript]
+.class component
+----
+class About extends React.Component {
+  render() { // <1>
+    return (
+      <h1>Hello I am class component</h1>
+    )
+  }
+}
+----
+<1> render() は React が予約している描画用のメソッド
+
+大きめなコンポーネントはクラスで作るとよい。
+
+== Fragment
+
+[quote]
+____
+フラグメント (fragment) を使うことで、DOM に余分なノードを追加することなく子要素をまとめることができるようになります。
+____
+
+NG::
++
+--
+[source,javascript]
+----
+render() {
+  return (
+    <div>
+      <td>Hello</td>
+      <td>World</td>
+    </div>
+  );
+}
+// <table>
+//   <tr>
+//     <div>
+//       <td>Hello</td>
+//       <td>World</td>
+//     </div>
+//   </tr>
+// </table>
+----
+--
+
+OK::
++
+--
+[source,javascript]
+----
+render() {
+  return (
+    <React.Fragment>
+      <td>Hello</td>
+      <td>World</td>
+    </React.Fragment>
+  );
+}
+// <table>
+//   <tr>
+//     <td>Hello</td>
+//     <td>World</td>
+//   </tr>
+// </table>
+----
+--
+
+== style
+
+[quote]
+____
+CSS のクラスをコンポーネントに適用するには、クラス名を文字列として className プロパティに与えてください。
+____
+
+[source,javascript]
+----
+render() {
+  return (
+    <div className="home-page">
+    // 略
+    </dev>
+    <style jsx>{`
+      .home-page {
+        padding-top: 80px;
+      }
+    `}
+    </style>
+  );
+}
+----
+
+Next で css ファイルや scss ファイルをインポートするにはパッケージのインストールが必要。
+
+[source, bash]
+----
+npm install --save @zeit/next-css @zeit/next-sass node-sass
+----
+
+次にトップディレクトリの next.config.js に利用宣言を記述。
+
+[source, javascript]
+----
+// いまどきな書き方？
+const withSass = require('@zeit/next-sass')
+module.exports = withSass({
+  cssModules: true
+})
+
+// 古い書き方？(Udemy でみた教材の書き方)
+const withCss = require('@zeit/next-css')
+const withSass = require('@zeit/next-sass')
+
+module.exports = withCss(withSass())
+----
+
+scss をインポートして使う。
+
+[source, javascript]
+----
+// pages/_app.js
+import Navbar from '../components/navbar'
+import Footer from '../components/footer'
+
+import '../styles/index.scss' // <1>
+
+class MovieApp extends App {
+
+// components/movieList.js
+      <a>{movie.name}</a>
+    </Link>
+  </h4>
+  <div className="movie-genre">{movie.genre}</div> // <2>
+  <p className="card-text">{this.shorten(movie.description, 100)}</p>
+</div>
+<div className="card-footer">
+----
+<1> ベースとなる _app.js で scss をインポート
+<2> コンポーネントの className で適用。コンポーネント側では scss をインポートする必要はない
+
+== 関数の宣言
+
+関数の宣言方法により呼び出し方が異なる。
+
+レギュラー関数その1::
++
+--
+[source,javascript]
+----
+increment() {
+  const { count } = this.state
+  this.setState({ count: count + 1 })
+}
+
+render() {
+  return (
+    <div className="container">
+      <button onClick={() => this.decrement()} className="btn btn-primary">Increment Number</button> // <1>
+      <h1>{this.state.count}</h1>
+    </div>
+  )
+}
+----
+<1> 通常関数の場合は `() => this.decrement()` で呼び出す必要がある
+--
+レギュラー関数その2::
++
+--
+[source,javascript]
+----
+class Foo extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      count: 0
+    }
+    this.increment = this.increment.bind(this) // <1>
+  }
+  increment() {
+    const { count } = this.state
+    this.setState({ count: count + 1 })
+  }
+  render() {
+    return (
+      <div className="container">
+        <button onClick={this.increment} className="btn btn-primary">Decrement Number</button> // <2>
+      </div>
+    )
+  }
+}
+----
+<1> 明示的にバインド
+<2> 明示的にバインドした場合は `this.increment` で呼び出せる
+--
+アロー関数::
++
+--
+[source,javascript]
+----
+increment = () => {
+  const { count } = this.state
+  this.setState({ count: count + 1 })
+}
+
+render() {
+  return (
+    <div className="container">
+      <button onClick={this.increment} className="btn btn-primary">Increment Number</button> // <1>
+      <h1>{this.state.count}</h1>
+    </div>
+  )
+}
+----
+<1> アロー関数の場合は `this.increment` で呼び出す必要がある
+--
+
+https://ja.reactjs.org/tutorial/tutorial.html#making-an-interactive-component[React のチュートリアル] に乗っ取るならば、レギュラー関数その1の方法がよい。
+
+なお、これらは javascript における context の考え方による違い。
+詳細は下記のサイトをみると良いかも？
+
+* https://qiita.com/suin/items/a44825d253d023e31e4d[JavaScript: 通常の関数とアロー関数の違いは「書き方だけ」ではない。異なる性質が10個ほどある。]
+* https://qiita.com/takeharu/items/9935ce476a17d6258e27#%E3%81%BE%E3%81%A8%E3%82%81[JavaScriptの「this」は「4種類」？？ - Qiita]
+* https://qiita.com/takkyun/items/c6e2f2cf25327299cf03[JavaScript の this を理解する多分一番分かりやすい説明 - Qiita]
+
+== debugger
+
+処理の途中に `debugger` を宣言し、ブラウザで inspect を開いて実行すると、処理が止まってデバックができるようになる。
+
+[source,javascript]
+----
+increment = () => {
+  const { count } = this.state
+  debbuger // <1>
+  this.setState({ count: count + 1 })
+}
+----
+<1> debugger の宣言
+
+== 状態の管理
+
+"React コンポーネントはコンストラクタで this.state を設定することで、状態を持つことができるようになります。"
+-- https://ja.reactjs.org/tutorial/tutorial.html#making-an-interactive-component[React チュートリアルより]
+
+[source,javascript]
+----
+class Foo extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { // <1>
+      count: 0
+    }
+  }
+
+  increment = () => {
+    const { count } = this.state <3>
+    // VERY BAD
+    // this.state.count = count + 1
+    this.setState({ count: count + 1 }) <2>
+  }
+}
+----
+<1> state の宣言
+<2> state を変更する場合は `setState` を使わないと変更されない
+<3> 省略プロパティ名。 `const count = this.state.count` と同等
+
+functional component で状態を管理する場合には、 https://ja.reactjs.org/docs/hooks-reference.html#usestate[useState フック] を使う。
+
+[source,javascript]
+.functional component におけるサンプル
+----
+import { useState } from 'react'
+
+export default function foo() {
+
+  const initialState = 0
+  const [ state, setState ] = useState(initialState) // <1> <2>
+
+  const increment = () => {
+    const newstate = state + 1
+    setState(newstate)
+  }
+
+  return (
+    <React.Fragment>
+      <div className="container">
+        <button onClick={increment} className="btn btn-primary">Increment Number</button>
+        <h1>{state}</h1>
+      </div>
+    </React.Fragment>
+  )
+}
+----
+<1> `state` は現在の状態
+<2> `setState` は `state` を更新するためのメソッド。 `setState` を呼ぶたびにコンポーネントは再描画されるっぽい
+
+[source,javascript]
+.functional component におけるサンプル2
+----
+import { useState } from 'react'
+
+const MovieCreateForm = () => {
+  const [form, setForm] = useState({
+    name: 'Some Movie',
+    description: 'Some Description'
+  })
+
+  const handleChange = (event) => {
+    const target = event.target // <1>
+    const name = target.name // <2>
+
+    setForm({ // <3>
+      ...form,
+      [name]: target.value
+    })
+  }
+
+  return (
+    <form>
+      { JSON.stringify(form)}
+      <div className="form-group">
+        <label for="name">Name</label>
+        <input
+          onChange={handleChange} // <4>
+          value={form.name}
+          name="name"
+          type="text"
+          className="form-control"
+          id="name"
+          aria-describedby="emailHelp"
+          placeholder="Lord of the Rings" />
+      </div>
+      // 以下略
+    </form>
+  )
+}
+
+export default MovieCreateForm
+----
+<1> event.target で要素を取得
+<2> target.name で要素の name 属性を取得
+<3> form を展開して上書きしている https://jsprimer.net/basic/object/#object-spread-syntax[参照]
+<4> handler の呼び出し
+
+
+== props の伝播
+
+[source,javascript]
+.親コンポーネント
+----
+export default function foo() {
+  const initialState = 0
+  const [ state, setState ] = useState(initialState)
+
+  const increment = () => {
+    const newstate = state + 1
+    setState(newstate)
+  }
+
+  return (
+    <React.Fragment>
+      <div className="container">
+        <button onClick={increment} className="btn btn-primary">Increment Number</button>
+      </div>
+      <ClassComponent // <1>
+        foo={state}
+        cap="Class Component"
+        clickHandler={() => {console.log("Hello World")}} />
+      <FunctionalComponent // <2>
+        foo={state}
+        cap="Functional Component"
+        clickHandler={() => {console.log("Hello World")}} />
+    </React.Fragment>
+  )
+}
+----
+<1> クラスコンポーネントへの伝播
+<2> 関数コンポーネントへの伝播
+
+[source,javascript]
+.子のクラスコンポーネント
+----
+class Foo extends React.Component {
+  render() {
+    // debugger
+    return (
+      <div className="container">
+        <h1>{this.props.cap}: [{this.props.foo}]</h1> // <1>
+        <button onClick={this.props.clickHandler}>Click ME!</button>
+      </div>
+    )
+  }
+}
+----
+<1> 親からのパラメーターはオブジェクトとして受けるので `this.props.xxx` でアクセスできる
+
+[NOTE]
+====
+暗黙的にコンストラクタで受けてクラスのメンバに設定してるっぽい？
+====
+
+[source,javascript]
+.子の関数コンポーネント
+----
+export default function foo(props) { // <1>
+  return (
+    <div className="container">
+      <h1>{props.cap}: [{props.foo}]</h1> // <1>
+      <button onClick={props.clickHandler}>Click ME!</button>
+    </div>
+  )
+}
+----
+<1> 親からのパラメーターはオブジェクトとして引数で受けるので `props.xxx` でアクセスできる
+
+== promise
+
+[source,javascript]
+----
+getMovies = () => {
+  return new Promise((resolve, reject) => { // <1>
+    setTimeout(() => {
+      resolve(MOVIE_DATA) // <2>
+    }, 2000)
+  })
+}
+
+Home = () => {
+  const [movies, setMovies] = useState([])
+
+  // improve this because now it's called everytime!
+  getMovies().then((movies) => { // <3> <4>
+    setMovies(movies)
+  })
+
+  return (...)
+}
+----
+<1> promise オブジェクトを返す
+<2> resolve (正常終了)時のコールバック
+<3> then で promise オブジェクトに対して await
+<4> 引数で resolve の引数を受け取る
+
+=== React における問題点
+
+コンポーネント内で `setState` で state を更新すると、コンポーネントの render が再度呼び出される。
+このとき、コンポーネントが promise を用いて非同期で setState を呼び出すとどうなるか？
+
+. functional compornent 呼び出し
+. promise による非同期処理の予約
+. render で描画
+. 非同期で setState 呼び出し
+. setState の呼び出しでコンポーネントの再描画 (functional compornent 呼び出し)
+. promise による非同期処理の予約
+. 以下ループ...
+
+というように無限ループとなる。
+これを抑止するためには `setState` の呼び出しに条件をつける必要がある。(state が変更した場合のみ再描画、みたいな)
+これを実現するのが `useEffect` 。
+
+なお、そもそも functional component を使っているから上記のような事象が発生する。
+なので class component を使って、ライフサイクルの中 (componentDidMount) で promise を resolve する、というのも手の一つ。
+
+== useEffect
+
+"副作用を有する可能性のある命令型のコードを受け付けます。"
+-- https://ja.reactjs.org/docs/hooks-reference.html#useeffect[React チュートリアルより]
+
+"useEffect に渡された関数はレンダーの結果が画面に反映された後に動作します。副作用とは React の純粋に関数的な世界から命令型の世界への避難ハッチであると考えてください。"
+-- https://ja.reactjs.org/docs/hooks-reference.html#useeffect[React チュートリアルより]
+
+
+[source,javascript]
+----
+import React, { useState, useEffect } from 'react'
+
+const Home = () => {
+  const [movies, setMovies] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const resMovies = await getMovies()
+      setMovies(resMovies)
+    }
+    fetchData();
+  }, [movies]) // <1>
+
+  // 以下略
+----
+<1> `movies` が変更された場合にのみ再描画されるようになる
+
+== class component による非同期 setState
+
+"componentDidMount() は、コンポーネントがマウントされた（ツリーに挿入された）直後に呼び出されます。DOM ノードを必要とする初期化はここで行われるべきです。"
+-- https://ja.reactjs.org/docs/react-component.html#componentdidmount[React Docs より]
+
+[source,javascript]
+----
+class Home extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      movies: [],
+      errorMessage: ''
+    }
+  }
+  componentDidMount() {
+    getMovies()
+      .then((movies) => {
+        this.setState({movies})
+      })
+      .catch((error) => {
+        this.setState({errorMessage: error})
+      })
+  }
+  render() {
+    const { movies, errorMessage } = this.state
+    return (
+      // ...
+      { errorMessage && // <1>
+        <div className="alert alert-danger" role="alert">
+          { errorMessage }
+        </div>
+      }
+      <MovieList movies={movies} />
+      // ...
+    )
+  }
+}
+----
+<1> errorMessage が設定されていればエラーメッセージを表示
+
+== getInitialProps
+
+"推奨: getStaticProps または getServerSideProps。Next.js 9.3以降を使用している場合は、getInitialPropsではなくgetStaticPropsやgetServerSidePropsを使用することをお勧めします。"
+-- https://nextjs.org/docs/api-reference/data-fetching/getInitialProps[Next.js Docs より]
+
+"getInitialPropsは、ページ内のサーバーサイドレンダリングを可能にし、初期データを生成することを可能にします。これは特にSEO対策に便利です。"
+-- https://nextjs.org/docs/api-reference/data-fetching/getInitialProps[Next.js Docs より]
+
+[source,javascript]
+----
+const Home = (props) => { // <2>
+  return (
+    <div>
+      <div className="home-page">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-9">
+              <div className="row">
+                <MovieList movies={props.movies} /> // <3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+Home.getInitialProps = async () => { // <1>
+  const movies = await getMovies()
+  return { movies } // <4>
+}
+
+export default Home
+----
+<1> getInitialProps の宣言。async/await として宣言する必要あり
+<2> props で getInitialProps の return を受け取る
+<3> getInitialProps で取得した movies を参照
+<4> この返し方をすると、受け手側では `props.movies.id` みたいな感じで使える。逆に展開してしまうと `props.id` といった記述になる
+
+getInitialProps で受け取る引数の属性は次の通り。
+https://nextjs.org/docs/api-reference/data-fetching/getInitialProps#context-object[(参照元)]
+
+[horizontal]
+pathname:: Current route. That is the path of the page in /pages
+query:: Query string section of URL parsed as an object
+asPath:: String of the actual path (including the query) shown in the browser
+req:: HTTP request object (server only)
+res:: HTTP response object (server only)
+err:: Error object if any error is encountered during the rendering
+
+== link
+
+[source,javascript]
+----
+import Link from 'next/link'
+
+export default function FirstPost() {
+  return (
+    <>
+      <h1>First Post</h1>
+      <h2>
+        <Link href="/"> // <1>
+          <a>Back to home</a>
+        </Link>
+      </h2>
+    </>
+  )
+}
+----
+<1> a タグを link タグでラップするルール
+
+== app component
+
+"Next.jsはAppコンポーネントを使ってページの初期化を行います。これをオーバーライドしてページの初期化を制御することができます。"
+-- https://nextjs.org/docs/advanced-features/custom-app[Next.js Docs より]
+
+[source,javascript]
+----
+// pages/_app.js // <1>
+
+import App from 'next/app'
+import Head from 'next/head'
+import Navbar from '../components/navbar'
+import Footer from '../components/footer'
+
+class MovieApp extends App { // <2>
+
+  static async getInitialProps(appContext) { // <3>
+    // Executing getInitialProps of page you are navigated to
+    const appProps = await App.getInitialProps(appContext) // <4>
+    return { ...appProps } // <5>
+  }
+
+  render() {
+    const { Component, pageProps } = this.props // <6>
+
+    return (
+      <div>
+        <Head>
+          <title>Home</title>
+          // ...略...
+        </Head>
+        <Navbar />
+        <div className="base-page">
+          <Component {...pageProps} /> // <7>
+        </div>
+        // ...略...
+      </div>
+    )
+  }
+}
+
+export default MovieApp
+----
+<1> _app.js は命名規約
+<2> 対象 page を呼び出すと、まずこの MovieApp が呼び出される
+<3> フレームワークより getInitialProps が呼ばれ
+<4> 対象 page の getInitialProps を呼び出す。 appContext はおまじない
+<5> appProps を展開したオブジェクトを返すと
+<6> クラス変数の props として参照できる。 Component もおまじないで、対象ページをコンポーネントとして扱っている(？)
+<7> 対象 page をコンポーネントとして呼び出して、 getInitialProps で取得した値を設定する
+
+わからん。
+親側で子のデータを取得して、子を呼び出すときにデータを設定してる？
+親側でハンドリングしてる感じか。。？
+
+== Dynamic Routes
+
+"定義済みのパスを使ってルートを定義するだけでは、複雑なアプリケーションでは必ずしも十分ではありません。Next.jsでは、ページ([param])に括弧を追加して動的なルートを作成することができます。"
+-- https://nextjs.org/docs/routing/dynamic-routes[Next.js Docs より]
+
+[source,javascript]
+----
+// pages/movies/[id].js // <1>
+
+import { useRouter } from 'next/router'
+
+const Movie = () => {
+  const router = useRouter()
+  const { id } = router.query // <2>
+
+  return (
+    <div className="container">
+      <h1>Movie with id: { id } </h1>
+    </div>
+  )
+}
+
+export default Movie
+----
+<1> [id].js は命名規則
+<2> /movies/[id] とした場合の [id] を取得
+
+"動的ルートへのリンクは、hrefとasの組み合わせです。pages/post/[pid].jsのページへのリンクは以下のようになります。"
+-- https://nextjs.org/docs/api-reference/next/link#dynamic-routes[Next.js Docs より]
+
+[source,javascript]
+----
+// 略
+<Link href="/movies/[id]" as={`/movies/${movie.id}`}>
+  <a><img className="card-img-top" src={movie.image} alt="" /></a>
+</Link>
+// 略
+----
+
+Dynamic Routes はディレクトリをネストしてもよい。
+例えば、 `movies/[id]/edit` のようなルーティングをしたい場合はネストすると利便性が良い(はず)。
+
+[source,bash]
+----
+$ tree --charset ascii
+.
+`-- pages
+    `-- movies
+        `-- [id]
+            |-- index.js # <1>
+            `-- edit.js # <2>
+----
+<1> `/movies/[id]` で呼ばれるページ
+<2> `/movies/[id]/edit` で呼ばれるページ
+
+== コンポジション (Containment)
+
+"コンポーネントの中には事前には子要素を知らないものもあります。これは Sidebar や Dialog のような汎用的な “入れ物” をあらわすコンポーネントではよく使われています。このようなコンポーネントでは特別な children という props を使い、以下のようにして受け取った子要素を出力することができます。"
+-- https://ja.reactjs.org/docs/composition-vs-inheritance.html[React Docs より]
+
+[source,javascript]
+----
+// FancyBorder.jsx
+function FancyBorder(props) {
+  return (
+    <div className={'FancyBorder FancyBorder-' + props.color}> // <1>
+      {props.children} // <2>
+    </div>
+  );
+}
+
+// WelcomeDialog.jsx
+function WelcomeDialog() {
+  return (
+    <FancyBorder color="blue"> // <1>
+      <h1 className="Dialog-title"> // <2>
+        Welcome
+      </h1>
+      <p className="Dialog-message">
+        Thank you for visiting our spacecraft!
+      </p>
+    </FancyBorder>
+  );
+}
+----
+<1> props.color には color="blue" が渡される。
+<2> props.children には FancyBorder タグ内の要素が渡される。
+
+== 子から親へのイベント伝播
+
+"コンポーネントに（onClick のような）イベントハンドラを渡すには、イベントハンドラやその他の関数を props として、子コンポーネントに渡してください。"
+-- https://ja.reactjs.org/docs/faq-functions.html[React Docs より]
+
+[WARNING]
+====
+下記のサンプルは全体的にコードを省略している。
+====
+
+[source,javascript]
+----
+// actions/index.js
+export const createMovie = (movie) => { // <1>
+  return new Promise((resolve, reject) => { // <2>
+    // Create ID for movie
+    MOVIE_DATA.push(movie)
+    setTimeout(() => {
+      resolve(MOVIE_DATA)
+      // reject('Cannot fetch data!')
+    }, 50)
+  })
+}
+
+// components/sideMenu.js
+import { createMovie } from '../actions'
+
+const SideMenu = (props) => {
+
+  const handleCreateMovie = (movie) => { // <3>
+    createMovie(movie).then((movies) => {
+      // Close modal after create
+      console.log(JSON.stringify(movies)) // <4>
+    })
+  }
+
+  return (
+    <div>
+      <Modal hasSubmit={false}>
+        <MovieCreateForm handleFormSubmit={handleCreateMovie} /> // <5>
+      </Modal>
+    </div>
+  )
+}
+
+// components/movieCreateForm.js
+const MovieCreateForm = (props) => { // <6>
+
+  const submitForm = () => { // <8>
+    props.handleFormSubmit({...form}) <7>
+  }
+
+  return (
+    <form>
+      <button onClick={submitForm} type="button" className="btn btn-primary">Create</button> // <9> <10>
+    </form>
+  )
+}
+----
+<1> メインロジック
+<2> 非同期で結果を返す
+<3> メインロジックを呼び出すハンドラA
+<4> 非同期処理の結果を受け取り必要な処理を行う
+<5> 子のコンポーネントへハンドラAを渡す
+<6> props には親からのハンドラAが含まれる
+<7> 親のハンドラAを呼び出し
+<8> イベント発火により呼び出されるメソッドB
+<9> イベント発火の起点となるボタンコントローラー
+<10> onClick にメソッドBを登録
+
+== Custom Server
+
+"カスタムサーバーを使用することを決める前に、Next.jsの統合ルーターではアプリの要件を満たせない場合にのみ使用すべきであることを覚えておいてください。カスタムサーバーを使用すると、サーバーレス機能や自動静的最適化などの重要なパフォーマンス最適化が削除されます。"
+-- https://nextjs.org/docs/advanced-features/custom-server[Next.js Docs より]
+
+[source,javascript]
+----
+const next = require('next')
+const express = require('express');
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {
+
+  const server = express();
+  // we are handling all of the request comming to our server
+  server.get('*', (req, res) => {
+    // next.js is handling requests and providing pages where we are navigating to
+    return handle(req, res)
+  })
+
+
+  const PORT = process.env.PORT || 3000;
+
+  server.listen(PORT, (err) => {
+    if (err) throw err
+    console.log('> Ready on port ' + PORT)
+  })
+})
+----
+
+== axios
+
+https://github.com/axios/axios[axios] を用いた HTTP リクエストのサンプル。
+
+[source,javascript]
+----
+import axios from 'axios'
+
+const BASE_URL = 'http://localhost:3000'
+
+export const getMovies = () => {
+  return axios.get(`${BASE_URL}/api/v1/movies`).then(res => res.data)
+}
+----
+
+== 処理後の画面遷移などのアクション
+
+[source,javascript]
+----
+// ...
+import { useRouter } from 'next/router' // <1>
+
+// Containment
+const SideMenu = (props) => {
+  // ...
+  const router = useRouter() // <2>
+
+  const handleCreateMovie = (movie) => {
+    createMovie(movie).then((movies) => {
+      modal.closeModal() // <3>
+      router.push('/')  // <4>
+    })
+  }
+
+  return (
+    // ...
+  )
+}
+
+export default SideMenu
+----
+<1> 遷移するためのルーティングオブジェクトをインポート
+<2> ルーティングオブジェクトを取得
+<3> 処理後にダイアログを閉じて
+<4> トップ画面へ遷移
+
+"useRouterはReactフックであり、クラスでは使用できません。withRouter を使うか、関数コンポーネントでクラスをラップするかのどちらかです。"
+-- https://nextjs.org/docs/api-reference/next/router#userouter[Next.js Docs より]
+
+[source,javascript]
+----
+// ...
+import Router from 'next/router'
+
+class EditMovie extends React.Component {
+
+  static async getInitialProps({query}) {
+    // ...
+  }
+
+  handleUpdateMovie = (movie) => {
+    updateMovie(movie).then((updatedMovie) => {
+      Router.push('/movies/[id]', `/movies/${movie.id}`)
+    })
+  }
+
+  render() {
+    // ...
+  }
+}
+
+export default EditMovie
+----
+
+== Next.js で API リクエストを処理 (API Routes)
+
+"APIルートは、Next.jsでAPIを構築するための簡単なソリューションを提供します。pages/apiフォルダ内の任意のファイルは/api/*にマップされ、ページではなくAPIエンドポイントとして扱われます。"
+-- https://nextjs.org/docs/api-routes/introduction[Next.js Docs より]
+
+[source,javascript]
+----
+// pages/api/v1/posts.js
+import axios from 'axios'
+
+export default async (req, res) => {
+  const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+  const posts = response.data
+
+  return res.json(posts.slice(0, 20))
+}
+
+// 呼び出しサンプル
+export const getPosts = () => {
+  return axios.get(`${BASE_URL}/api/v1/posts`).then(res => res.data)
+}
+----
+
+== memo
+
+cmder::
+* https://cmder.net/[cmder - windows 向けポータブルコンソール]
+
+ブラケットによる変数アクセス::
+* https://ja.reactjs.org/docs/jsx-in-depth.html#javascript-expressions-as-props[プロパティとしての JavaScript 式]
+* https://ja.reactjs.org/docs/jsx-in-depth.html#javascript-expressions-as-children[子要素としての JavaScript 式]
+
+テンプレートリテラル::
++
+--
+"テンプレートリテラル中に${変数名}で書かれた変数は評価時に展開されます。 つまり、先ほどの文字列結合は次のように書けます。"
+-- https://jsprimer.net/basic/string/#concat[JavaScript Primer より]
+--
++
+[source,javascript]
+----
+const name = "JavaScript";
+console.log(`Hello ${name}!`);// => "Hello JavaScript!"
+----
+
+省略記法1::
++
+--
+[source,javascript]
+.省略前
+----
+export const getMovieById = (id) => {
+
+  return new Promise((resolve, reject) => {
+    const movieIndex = MOVIE_DATA.findIndex((movie) => {
+      movie.id === id
+    })
+    const movie = MOVIE_DATA[movieIndex]
+
+    setTimeout(() => {
+      resolve(movie)
+    }, 50)
+  })
+}
+----
+--
++
+--
+[source,javascript]
+.省略後
+----
+export const getMovieById = (id) => {
+
+  return new Promise((resolve, reject) => {
+    const movieIndex = MOVIE_DATA.findIndex(m => m.id === id)
+    const movie = MOVIE_DATA[movieIndex]
+
+    setTimeout(() => resolve(movie), 50)
+  })
+}
+----
+--
+
+省略記法2::
++
+--
+[source,javascript]
+.省略前
+----
+  const images = movies.map((movie) => {
+    return {
+      id: `image-${movie.id}`,
+      image: movie.image
+    }
+  })
+----
+--
++
+--
+[source,javascript]
+.省略後
+----
+  const images = movies.map(movie => ({
+      id: `image-${movie.id}`,
+      image: movie.image }))
+----
+--
+
+Array#map::
++
+--
+"Array#mapは配列の要素を順番にコールバック関数へ渡し、コールバック関数が返した値から新しい配列を返す非破壊的なメソッドです。 配列の各要素を加工したい場合に利用します。"
+-- https://jsprimer.net/basic/array/#array-map[JavaScript Primer より]
+--
++
+--
+[source,javascript]
+----
+const array = [1, 2, 3];
+// 各要素に10を乗算した新しい配列を作成する
+const newArray = array.map((currentValue, index, array) => {
+    return currentValue * 10;
+});
+console.log(newArray); // => [10, 20, 30]
+// 元の配列とは異なるインスタンス
+console.log(array !== newArray); // => true
+----
+--
+
+Computed property names::
++
+--
+"ブラケット記法を用いたプロパティ定義は、オブジェクトリテラルの中でも利用できます。 オブジェクトリテラル内でのブラケット記法を使ったプロパティ名はComputed property namesと呼ばれます"
+-- https://jsprimer.net/basic/object/#add-property[JavaScript Primer より]
+--
++
+--
+[source,javascript]
+----
+const key = "key-string";
+// Computed Propertyで`key`の評価結果 "key-string" をプロパティ名に利用
+const obj = {
+    [key]: "value"
+};
+console.log(obj[key]); // => "value"
+----
+--
+
+spread構文::
++
+--
+"オブジェクトのspread構文は、Object.assignとは異なり必ず新しいオブジェクトを作成します。 なぜならspread構文はオブジェクトリテラルの中でのみ記述でき、オブジェクトリテラルは新しいオブジェクトを作成するためです。"
+-- https://jsprimer.net/basic/object/#object-spread-syntax[JavaScript Primer より]
+--
++
+--
+[source,javascript]
+----
+// 値渡し
+const objectA = { a: "a" };
+const objectB = { ...objectA };
+objectB.a = "b";
+console.log(objectB); // => { a: "a" }
+console.log(objectA); // => { a: "b" }
+----
+--
++
+--
+[source,javascript]
+----
+// 参照渡し
+const objectA = { a: "a" };
+const objectB = objectA;
+objectB.a = "b";
+console.log(objectB); // => { a: "b" }
+console.log(objectA); // => { a: "b" }
+----
+--
+
+ランダム文字列の生成::
+`Math.random().toString(36).substr(2, 7)`
++
+--
+"Math.random() の提供する乱数は、暗号に使用可能な安全性を備えていません。セキュリティに関連する目的では使用しないでください。代わりに Web Crypto API（より正確にはwindow.crypto.getRandomValues() メソッド）を使用してください。"
+-- https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random[MDN より]
+--
+
