@@ -1060,31 +1060,70 @@ export const getPosts = () => {
 }
 ----
 
+== env(環境変数)
+
+"Next.jsには環境変数のサポートが組み込まれています。"
+-- https://nextjs.org/docs/basic-features/environment-variables[Next.js Docs より]
+
+`.env.xxx` を用いることで環境変数をセットできる。
+また、環境変数は `process.env.xxx` といった記述でアクセスできる。
+
+[source]
+.example: .env
+----
+DB_HOST=localhost
+DB_USER=myuser
+DB_PASS=mypassword
+----
+
+[source,javascript]
+.example: using getStaticProps
+----
+export async function getStaticProps() {
+  const db = await myDB.connect({
+    host: process.env.DB_HOST,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+  })
+  // ...
+}
+----
+
+`.env` には種類があり、使い分けることができる。
+基本は `.env.local` だけでこと足りる。
+
+[horizontal]
+`.env`:: すべての環境においてロードされる
+`.env.development`:: 開発環境(`next dev`) においてロードされる
+`.env.production`:: 本番環境(`next start`) においてロードされる
+`.env.local`:: すべての環境においてロードされ、その他の設定を上書きできる(バージョン管理対象外とするべき)
+
+
+
 == memo
 
-cmder::
+=== cmder
+
 * https://cmder.net/[cmder - windows 向けポータブルコンソール]
 
-ブラケットによる変数アクセス::
+=== ブラケットによる変数アクセス
+
 * https://ja.reactjs.org/docs/jsx-in-depth.html#javascript-expressions-as-props[プロパティとしての JavaScript 式]
 * https://ja.reactjs.org/docs/jsx-in-depth.html#javascript-expressions-as-children[子要素としての JavaScript 式]
 
-テンプレートリテラル::
-+
---
+=== テンプレートリテラル
+
 "テンプレートリテラル中に${変数名}で書かれた変数は評価時に展開されます。 つまり、先ほどの文字列結合は次のように書けます。"
 -- https://jsprimer.net/basic/string/#concat[JavaScript Primer より]
---
-+
+
 [source,javascript]
 ----
 const name = "JavaScript";
 console.log(`Hello ${name}!`);// => "Hello JavaScript!"
 ----
 
-省略記法1::
-+
---
+=== 省略記法1
+
 [source,javascript]
 .省略前
 ----
@@ -1102,9 +1141,7 @@ export const getMovieById = (id) => {
   })
 }
 ----
---
-+
---
+
 [source,javascript]
 .省略後
 ----
@@ -1118,11 +1155,9 @@ export const getMovieById = (id) => {
   })
 }
 ----
---
 
-省略記法2::
-+
---
+=== 省略記法2
+
 [source,javascript]
 .省略前
 ----
@@ -1133,9 +1168,7 @@ export const getMovieById = (id) => {
     }
   })
 ----
---
-+
---
+
 [source,javascript]
 .省略後
 ----
@@ -1143,16 +1176,12 @@ export const getMovieById = (id) => {
       id: `image-${movie.id}`,
       image: movie.image }))
 ----
---
 
-Array#map::
-+
---
+=== Array#map
+
 "Array#mapは配列の要素を順番にコールバック関数へ渡し、コールバック関数が返した値から新しい配列を返す非破壊的なメソッドです。 配列の各要素を加工したい場合に利用します。"
 -- https://jsprimer.net/basic/array/#array-map[JavaScript Primer より]
---
-+
---
+
 [source,javascript]
 ----
 const array = [1, 2, 3];
@@ -1164,16 +1193,12 @@ console.log(newArray); // => [10, 20, 30]
 // 元の配列とは異なるインスタンス
 console.log(array !== newArray); // => true
 ----
---
 
-Computed property names::
-+
---
+=== Computed property names
+
 "ブラケット記法を用いたプロパティ定義は、オブジェクトリテラルの中でも利用できます。 オブジェクトリテラル内でのブラケット記法を使ったプロパティ名はComputed property namesと呼ばれます"
 -- https://jsprimer.net/basic/object/#add-property[JavaScript Primer より]
---
-+
---
+
 [source,javascript]
 ----
 const key = "key-string";
@@ -1183,16 +1208,12 @@ const obj = {
 };
 console.log(obj[key]); // => "value"
 ----
---
 
-spread構文::
-+
---
+=== spread構文
+
 "オブジェクトのspread構文は、Object.assignとは異なり必ず新しいオブジェクトを作成します。 なぜならspread構文はオブジェクトリテラルの中でのみ記述でき、オブジェクトリテラルは新しいオブジェクトを作成するためです。"
 -- https://jsprimer.net/basic/object/#object-spread-syntax[JavaScript Primer より]
---
-+
---
+
 [source,javascript]
 ----
 // 値渡し
@@ -1202,9 +1223,7 @@ objectB.a = "b";
 console.log(objectB); // => { a: "a" }
 console.log(objectA); // => { a: "b" }
 ----
---
-+
---
+
 [source,javascript]
 ----
 // 参照渡し
@@ -1214,13 +1233,30 @@ objectB.a = "b";
 console.log(objectB); // => { a: "b" }
 console.log(objectA); // => { a: "b" }
 ----
---
 
-ランダム文字列の生成::
+=== ランダム文字列の生成
 `Math.random().toString(36).substr(2, 7)`
-+
---
+
 "Math.random() の提供する乱数は、暗号に使用可能な安全性を備えていません。セキュリティに関連する目的では使用しないでください。代わりに Web Crypto API（より正確にはwindow.crypto.getRandomValues() メソッド）を使用してください。"
 -- https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random[MDN より]
---
 
+=== npm install --save
+
+パッケージのインストール時、 package.json の dependencies に追加してくれる機能。
+(逆に言うと、 `--save` をつけないと package.json に書いてくれない？未検証)
+ただし、npm 5.0.0 以降からは install 時にデフォルトで save してくれるので --save や -S オプションを指定する必要はない。
+https://qiita.com/havveFn/items/c5beda8572aa8c1e6be6[(参照元)]
+
+=== 異なる名前を持つ変数への代入
+
+"オブジェクトから変数を取り出して、オブジェクトのプロパティとは異なる名前の変数に代入することができます。"
+-- https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment[MDN より]
+
+[source,javascript]
+----
+const o = {p: 42, q: true};
+const {p: foo, q: bar} = o;
+
+console.log(foo); // 42
+console.log(bar); // true
+----

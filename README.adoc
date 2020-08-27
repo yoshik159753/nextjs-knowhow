@@ -1,7 +1,1 @@
 = README.adoc
-
-[source, bash]
-----
-asciidoctor -D docs -o index.html ./src/main.adoc
-----
-
