@@ -435,10 +435,67 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
 <h1>Next.js KnowHow</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_movie_app_course_のディレクトリ構成">movie-app-course のディレクトリ構成</a></li>
+<li><a href="#_初期化">初期化</a></li>
+<li><a href="#_functional_component">functional component</a></li>
+<li><a href="#_class_component">class component</a></li>
+<li><a href="#_fragment">Fragment</a></li>
+<li><a href="#_style">style</a></li>
+<li><a href="#_関数の宣言">関数の宣言</a></li>
+<li><a href="#_debugger">debugger</a></li>
+<li><a href="#_状態の管理">状態の管理</a></li>
+<li><a href="#_props_の伝播">props の伝播</a></li>
+<li><a href="#_promise">promise</a>
+<ul class="sectlevel2">
+<li><a href="#_react_における問題点">React における問題点</a></li>
+</ul>
+</li>
+<li><a href="#_useeffect">useEffect</a></li>
+<li><a href="#_class_component_による非同期_setstate">class component による非同期 setState</a></li>
+<li><a href="#_getinitialprops">getInitialProps</a></li>
+<li><a href="#_link">link</a></li>
+<li><a href="#_app_component">app component</a></li>
+<li><a href="#_dynamic_routes">Dynamic Routes</a></li>
+<li><a href="#_コンポジション_containment">コンポジション (Containment)</a></li>
+<li><a href="#_子から親へのイベント伝播">子から親へのイベント伝播</a></li>
+<li><a href="#_custom_server">Custom Server</a></li>
+<li><a href="#_axios">axios</a></li>
+<li><a href="#_処理後の画面遷移などのアクション">処理後の画面遷移などのアクション</a></li>
+<li><a href="#_next_js_で_api_リクエストを処理_api_routes">Next.js で API リクエストを処理 (API Routes)</a></li>
+<li><a href="#_env環境変数">env(環境変数)</a></li>
+<li><a href="#_ログインによる制御">ログインによる制御</a>
+<ul class="sectlevel2">
+<li><a href="#_ヘッダの制御">ヘッダの制御</a></li>
+<li><a href="#_secret_なページの制御">secret なページの制御</a></li>
+</ul>
+</li>
+<li><a href="#_redirect_用コンポーネント">redirect 用コンポーネント</a></li>
+<li><a href="#_memo">memo</a>
+<ul class="sectlevel2">
+<li><a href="#_cmder">cmder</a></li>
+<li><a href="#_ブラケットによる変数アクセス">ブラケットによる変数アクセス</a></li>
+<li><a href="#_テンプレートリテラル">テンプレートリテラル</a></li>
+<li><a href="#_省略記法1">省略記法1</a></li>
+<li><a href="#_省略記法2">省略記法2</a></li>
+<li><a href="#_arraymap">Array#map</a></li>
+<li><a href="#_computed_property_names">Computed property names</a></li>
+<li><a href="#_spread構文">spread構文</a></li>
+<li><a href="#_ランダム文字列の生成">ランダム文字列の生成</a></li>
+<li><a href="#_npm_install_save">npm install --save</a></li>
+<li><a href="#_異なる名前を持つ変数への代入">異なる名前を持つ変数への代入</a></li>
+<li><a href="#_引数の波括弧">引数の波括弧({})</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div id="content">
 <div id="preamble">
@@ -473,13 +530,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ tree --charset unicode -I node_modules
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ tree --charset unicode -I node_modules
 .
 |-- README.adoc
 |-- actions
 |   `-- index.js
 |-- components
-|   |-- carousel.js // <b class="conum">(1)</b>
+|   |-- carousel.js <i class="conum" data-value="1"></i><b>(1)</b>
 |   |-- footer.js
 |   |-- modal.js
 |   |-- movieCreateForm.js
@@ -520,11 +577,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>carousel は回転木馬。しいてはスライドしながら画像表示するやつ</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>carousel は回転木馬。しいてはスライドしながら画像表示するやつ</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -533,7 +591,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npx create-next-app lean-nextjs-movie-app</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">npx create-next-app lean-nextjs-movie-app</code></pre>
 </div>
 </div>
 </div>
@@ -544,22 +602,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">functional component - arrow function - 1</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const About = () =&gt; ( // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const About = () =&gt; ( <i class="conum" data-value="1"></i><b>(1)</b>
   &lt;h1&gt;Hello About Page&lt;/h1&gt;
 )</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>この書き方の場合は内部で変数宣言ができない</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>この書き方の場合は内部で変数宣言ができない</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">functional component - arrow function - 2</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const About = () =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const About = () =&gt; {
   const message = 'Hello World'
   return (
     &lt;h1&gt;Hello About Page - {message}&lt;/h1&gt;
@@ -570,7 +629,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">functional component - arrow function - 3</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const About = () =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const About = () =&gt; {
   const message = 'Hello World'
   return React.createElement('h1', null, 'I am genereting this with createElement')
 }</code></pre>
@@ -579,7 +638,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">unctional component - normal function</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">function About() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">function About() {
   return (
     &lt;h1&gt;Hello About Page&lt;/h1&gt;
   )
@@ -610,8 +669,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">class component</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">class About extends React.Component {
-  render() { // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">class About extends React.Component {
+  render() { <i class="conum" data-value="1"></i><b>(1)</b>
     return (
       &lt;h1&gt;Hello I am class component&lt;/h1&gt;
     )
@@ -620,11 +679,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>render() は React が予約している描画用のメソッド</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>render() は React が予約している描画用のメソッド</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>大きめなコンポーネントはクラスで作るとよい。</p>
@@ -649,7 +709,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">render() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">render() {
   return (
     &lt;div&gt;
       &lt;td&gt;Hello&lt;/td&gt;
@@ -676,7 +736,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">render() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">render() {
   return (
     &lt;React.Fragment&gt;
       &lt;td&gt;Hello&lt;/td&gt;
@@ -711,7 +771,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">render() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">render() {
   return (
     &lt;div className="home-page"&gt;
     // 略
@@ -731,7 +791,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm install --save @zeit/next-css @zeit/next-sass node-sass</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">npm install --save @zeit/next-css @zeit/next-sass node-sass</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -739,7 +799,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// いまどきな書き方？
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// いまどきな書き方？
 const withSass = require('@zeit/next-sass')
 module.exports = withSass({
   cssModules: true
@@ -757,11 +817,11 @@ module.exports = withCss(withSass())</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// pages/_app.js
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// pages/_app.js
 import Navbar from '../components/navbar'
 import Footer from '../components/footer'
 
-import '../styles/index.scss' // <b class="conum">(1)</b>
+import '../styles/index.scss' <i class="conum" data-value="1"></i><b>(1)</b>
 
 class MovieApp extends App {
 
@@ -769,21 +829,23 @@ class MovieApp extends App {
       &lt;a&gt;{movie.name}&lt;/a&gt;
     &lt;/Link&gt;
   &lt;/h4&gt;
-  &lt;div className="movie-genre"&gt;{movie.genre}&lt;/div&gt; // <b class="conum">(2)</b>
+  &lt;div className="movie-genre"&gt;{movie.genre}&lt;/div&gt; <i class="conum" data-value="2"></i><b>(2)</b>
   &lt;p className="card-text"&gt;{this.shorten(movie.description, 100)}&lt;/p&gt;
 &lt;/div&gt;
 &lt;div className="card-footer"&gt;</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>ベースとなる _app.js で scss をインポート</p>
-</li>
-<li>
-<p>コンポーネントの className で適用。コンポーネント側では scss をインポートする必要はない</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>ベースとなる _app.js で scss をインポート</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>コンポーネントの className で適用。コンポーネント側では scss をインポートする必要はない</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -801,7 +863,7 @@ class MovieApp extends App {
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">increment() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">increment() {
   const { count } = this.state
   this.setState({ count: count + 1 })
 }
@@ -809,7 +871,7 @@ class MovieApp extends App {
 render() {
   return (
     &lt;div className="container"&gt;
-      &lt;button onClick={() =&gt; this.decrement()} className="btn btn-primary"&gt;Increment Number&lt;/button&gt; // <b class="conum">(1)</b>
+      &lt;button onClick={() =&gt; this.decrement()} className="btn btn-primary"&gt;Increment Number&lt;/button&gt; <i class="conum" data-value="1"></i><b>(1)</b>
       &lt;h1&gt;{this.state.count}&lt;/h1&gt;
     &lt;/div&gt;
   )
@@ -817,11 +879,12 @@ render() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>通常関数の場合は <code>() &#8658; this.decrement()</code> で呼び出す必要がある</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>通常関数の場合は <code>() &#8658; this.decrement()</code> で呼び出す必要がある</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -832,13 +895,13 @@ render() {
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Foo extends React.Component {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">class Foo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       count: 0
     }
-    this.increment = this.increment.bind(this) // <b class="conum">(1)</b>
+    this.increment = this.increment.bind(this) <i class="conum" data-value="1"></i><b>(1)</b>
   }
   increment() {
     const { count } = this.state
@@ -847,7 +910,7 @@ render() {
   render() {
     return (
       &lt;div className="container"&gt;
-        &lt;button onClick={this.increment} className="btn btn-primary"&gt;Decrement Number&lt;/button&gt; // <b class="conum">(2)</b>
+        &lt;button onClick={this.increment} className="btn btn-primary"&gt;Decrement Number&lt;/button&gt; <i class="conum" data-value="2"></i><b>(2)</b>
       &lt;/div&gt;
     )
   }
@@ -855,14 +918,16 @@ render() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>明示的にバインド</p>
-</li>
-<li>
-<p>明示的にバインドした場合は <code>this.increment</code> で呼び出せる</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>明示的にバインド</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>明示的にバインドした場合は <code>this.increment</code> で呼び出せる</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -873,7 +938,7 @@ render() {
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">increment = () =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">increment = () =&gt; {
   const { count } = this.state
   this.setState({ count: count + 1 })
 }
@@ -881,7 +946,7 @@ render() {
 render() {
   return (
     &lt;div className="container"&gt;
-      &lt;button onClick={this.increment} className="btn btn-primary"&gt;Increment Number&lt;/button&gt; // <b class="conum">(1)</b>
+      &lt;button onClick={this.increment} className="btn btn-primary"&gt;Increment Number&lt;/button&gt; <i class="conum" data-value="1"></i><b>(1)</b>
       &lt;h1&gt;{this.state.count}&lt;/h1&gt;
     &lt;/div&gt;
   )
@@ -889,11 +954,12 @@ render() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>アロー関数の場合は <code>this.increment</code> で呼び出す必要がある</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>アロー関数の場合は <code>this.increment</code> で呼び出す必要がある</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -930,19 +996,20 @@ render() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">increment = () =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">increment = () =&gt; {
   const { count } = this.state
-  debbuger // <b class="conum">(1)</b>
+  debbuger <i class="conum" data-value="1"></i><b>(1)</b>
   this.setState({ count: count + 1 })
 }</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>debugger の宣言</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>debugger の宣言</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -959,35 +1026,38 @@ React コンポーネントはコンストラクタで this.state を設定す�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Foo extends React.Component {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">class Foo extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { // <b class="conum">(1)</b>
+    this.state = { <i class="conum" data-value="1"></i><b>(1)</b>
       count: 0
     }
   }
 
   increment = () =&gt; {
-    const { count } = this.state <b class="conum">(3)</b>
+    const { count } = this.state <i class="conum" data-value="3"></i><b>(3)</b>
     // VERY BAD
     // this.state.count = count + 1
-    this.setState({ count: count + 1 }) <b class="conum">(2)</b>
+    this.setState({ count: count + 1 }) <i class="conum" data-value="2"></i><b>(2)</b>
   }
 }</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>state の宣言</p>
-</li>
-<li>
-<p>state を変更する場合は <code>setState</code> を使わないと変更されない</p>
-</li>
-<li>
-<p>省略プロパティ名。 <code>const count = this.state.count</code> と同等</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>state の宣言</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>state を変更する場合は <code>setState</code> を使わないと変更されない</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>省略プロパティ名。 <code>const count = this.state.count</code> と同等</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>functional component で状態を管理する場合には、 <a href="https://ja.reactjs.org/docs/hooks-reference.html#usestate">useState フック</a> を使う。</p>
@@ -995,12 +1065,12 @@ React コンポーネントはコンストラクタで this.state を設定す�
 <div class="listingblock">
 <div class="title">functional component におけるサンプル</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">import { useState } from 'react'
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useState } from 'react'
 
 export default function foo() {
 
   const initialState = 0
-  const [ state, setState ] = useState(initialState) // <b class="conum">(1)</b> <b class="conum">(2)</b>
+  const [ state, setState ] = useState(initialState) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
 
   const increment = () =&gt; {
     const newstate = state + 1
@@ -1019,19 +1089,21 @@ export default function foo() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p><code>state</code> は現在の状態</p>
-</li>
-<li>
-<p><code>setState</code> は <code>state</code> を更新するためのメソッド。 <code>setState</code> を呼ぶたびにコンポーネントは再描画されるっぽい</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>state</code> は現在の状態</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>setState</code> は <code>state</code> を更新するためのメソッド。 <code>setState</code> を呼ぶたびにコンポーネントは再描画されるっぽい</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">functional component におけるサンプル2</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">import { useState } from 'react'
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useState } from 'react'
 
 const MovieCreateForm = () =&gt; {
   const [form, setForm] = useState({
@@ -1040,10 +1112,10 @@ const MovieCreateForm = () =&gt; {
   })
 
   const handleChange = (event) =&gt; {
-    const target = event.target // <b class="conum">(1)</b>
-    const name = target.name // <b class="conum">(2)</b>
+    const target = event.target <i class="conum" data-value="1"></i><b>(1)</b>
+    const name = target.name <i class="conum" data-value="2"></i><b>(2)</b>
 
-    setForm({ // <b class="conum">(3)</b>
+    setForm({ <i class="conum" data-value="3"></i><b>(3)</b>
       ...form,
       [name]: target.value
     })
@@ -1055,7 +1127,7 @@ const MovieCreateForm = () =&gt; {
       &lt;div className="form-group"&gt;
         &lt;label for="name"&gt;Name&lt;/label&gt;
         &lt;input
-          onChange={handleChange} // <b class="conum">(4)</b>
+          onChange={handleChange} <i class="conum" data-value="4"></i><b>(4)</b>
           value={form.name}
           name="name"
           type="text"
@@ -1073,20 +1145,24 @@ export default MovieCreateForm</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>event.target で要素を取得</p>
-</li>
-<li>
-<p>target.name で要素の name 属性を取得</p>
-</li>
-<li>
-<p>form を展開して上書きしている <a href="https://jsprimer.net/basic/object/#object-spread-syntax">参照</a></p>
-</li>
-<li>
-<p>handler の呼び出し</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>event.target で要素を取得</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>target.name で要素の name 属性を取得</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>form を展開して上書きしている <a href="https://jsprimer.net/basic/object/#object-spread-syntax">参照</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>handler の呼び出し</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1096,7 +1172,7 @@ export default MovieCreateForm</code></pre>
 <div class="listingblock">
 <div class="title">親コンポーネント</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">export default function foo() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export default function foo() {
   const initialState = 0
   const [ state, setState ] = useState(initialState)
 
@@ -1110,11 +1186,11 @@ export default MovieCreateForm</code></pre>
       &lt;div className="container"&gt;
         &lt;button onClick={increment} className="btn btn-primary"&gt;Increment Number&lt;/button&gt;
       &lt;/div&gt;
-      &lt;ClassComponent // <b class="conum">(1)</b>
+      &lt;ClassComponent <i class="conum" data-value="1"></i><b>(1)</b>
         foo={state}
         cap="Class Component"
         clickHandler={() =&gt; {console.log("Hello World")}} /&gt;
-      &lt;FunctionalComponent // <b class="conum">(2)</b>
+      &lt;FunctionalComponent <i class="conum" data-value="2"></i><b>(2)</b>
         foo={state}
         cap="Functional Component"
         clickHandler={() =&gt; {console.log("Hello World")}} /&gt;
@@ -1124,24 +1200,26 @@ export default MovieCreateForm</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>クラスコンポーネントへの伝播</p>
-</li>
-<li>
-<p>関数コンポーネントへの伝播</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>クラスコンポーネントへの伝播</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>関数コンポーネントへの伝播</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">子のクラスコンポーネント</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Foo extends React.Component {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">class Foo extends React.Component {
   render() {
     // debugger
     return (
       &lt;div className="container"&gt;
-        &lt;h1&gt;{this.props.cap}: [{this.props.foo}]&lt;/h1&gt; // <b class="conum">(1)</b>
+        &lt;h1&gt;{this.props.cap}: [{this.props.foo}]&lt;/h1&gt; <i class="conum" data-value="1"></i><b>(1)</b>
         &lt;button onClick={this.props.clickHandler}&gt;Click ME!&lt;/button&gt;
       &lt;/div&gt;
     )
@@ -1150,17 +1228,18 @@ export default MovieCreateForm</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>親からのパラメーターはオブジェクトとして受けるので <code>this.props.xxx</code> でアクセスできる</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>親からのパラメーターはオブジェクトとして受けるので <code>this.props.xxx</code> でアクセスできる</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -1173,10 +1252,10 @@ export default MovieCreateForm</code></pre>
 <div class="listingblock">
 <div class="title">子の関数コンポーネント</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">export default function foo(props) { // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export default function foo(props) { <i class="conum" data-value="1"></i><b>(1)</b>
   return (
     &lt;div className="container"&gt;
-      &lt;h1&gt;{props.cap}: [{props.foo}]&lt;/h1&gt; // <b class="conum">(1)</b>
+      &lt;h1&gt;{props.cap}: [{props.foo}]&lt;/h1&gt; <i class="conum" data-value="1"></i><b>(1)</b>
       &lt;button onClick={props.clickHandler}&gt;Click ME!&lt;/button&gt;
     &lt;/div&gt;
   )
@@ -1184,11 +1263,12 @@ export default MovieCreateForm</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>親からのパラメーターはオブジェクトとして引数で受けるので <code>props.xxx</code> でアクセスできる</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>親からのパラメーターはオブジェクトとして引数で受けるので <code>props.xxx</code> でアクセスできる</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1197,10 +1277,10 @@ export default MovieCreateForm</code></pre>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">getMovies = () =&gt; {
-  return new Promise((resolve, reject) =&gt; { // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">getMovies = () =&gt; {
+  return new Promise((resolve, reject) =&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
     setTimeout(() =&gt; {
-      resolve(MOVIE_DATA) // <b class="conum">(2)</b>
+      resolve(MOVIE_DATA) <i class="conum" data-value="2"></i><b>(2)</b>
     }, 2000)
   })
 }
@@ -1209,7 +1289,7 @@ Home = () =&gt; {
   const [movies, setMovies] = useState([])
 
   // improve this because now it's called everytime!
-  getMovies().then((movies) =&gt; { // <b class="conum">(3)</b> <b class="conum">(4)</b>
+  getMovies().then((movies) =&gt; { <i class="conum" data-value="3"></i><b>(3)</b> <i class="conum" data-value="4"></i><b>(4)</b>
     setMovies(movies)
   })
 
@@ -1218,20 +1298,24 @@ Home = () =&gt; {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>promise オブジェクトを返す</p>
-</li>
-<li>
-<p>resolve (正常終了)時のコールバック</p>
-</li>
-<li>
-<p>then で promise オブジェクトに対して await</p>
-</li>
-<li>
-<p>引数で resolve の引数を受け取る</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>promise オブジェクトを返す</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>resolve (正常終了)時のコールバック</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>then で promise オブジェクトに対して await</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>引数で resolve の引数を受け取る</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_react_における問題点">React における問題点</h3>
@@ -1297,7 +1381,7 @@ useEffect に渡された関数はレンダーの結果が画面に反映され�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">import React, { useState, useEffect } from 'react'
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import React, { useState, useEffect } from 'react'
 
 const Home = () =&gt; {
   const [movies, setMovies] = useState([])
@@ -1308,17 +1392,18 @@ const Home = () =&gt; {
       setMovies(resMovies)
     }
     fetchData();
-  }, [movies]) // <b class="conum">(1)</b>
+  }, [movies]) <i class="conum" data-value="1"></i><b>(1)</b>
 
   // 以下略</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p><code>movies</code> が変更された場合にのみ再描画されるようになる</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>movies</code> が変更された場合にのみ再描画されるようになる</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1335,7 +1420,7 @@ componentDidMount() は、コンポーネントがマウントされた（ツリ
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">class Home extends React.Component {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -1356,7 +1441,7 @@ componentDidMount() は、コンポーネントがマウントされた（ツリ
     const { movies, errorMessage } = this.state
     return (
       // ...
-      { errorMessage &amp;&amp; // <b class="conum">(1)</b>
+      { errorMessage &amp;&amp; <i class="conum" data-value="1"></i><b>(1)</b>
         &lt;div className="alert alert-danger" role="alert"&gt;
           { errorMessage }
         &lt;/div&gt;
@@ -1369,11 +1454,12 @@ componentDidMount() は、コンポーネントがマウントされた（ツリ
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>errorMessage が設定されていればエラーメッセージを表示</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>errorMessage が設定されていればエラーメッセージを表示</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1398,7 +1484,7 @@ getInitialPropsは、ページ内のサーバーサイドレンダリングを�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const Home = (props) =&gt; { // <b class="conum">(2)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Home = (props) =&gt; { <i class="conum" data-value="2"></i><b>(2)</b>
   return (
     &lt;div&gt;
       &lt;div className="home-page"&gt;
@@ -1406,7 +1492,7 @@ getInitialPropsは、ページ内のサーバーサイドレンダリングを�
           &lt;div className="row"&gt;
             &lt;div className="col-lg-9"&gt;
               &lt;div className="row"&gt;
-                &lt;MovieList movies={props.movies} /&gt; // <b class="conum">(3)</b>
+                &lt;MovieList movies={props.movies} /&gt; <i class="conum" data-value="3"></i><b>(3)</b>
               &lt;/div&gt;
             &lt;/div&gt;
           &lt;/div&gt;
@@ -1416,29 +1502,33 @@ getInitialPropsは、ページ内のサーバーサイドレンダリングを�
   )
 }
 
-Home.getInitialProps = async () =&gt; { // <b class="conum">(1)</b>
+Home.getInitialProps = async () =&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
   const movies = await getMovies()
-  return { movies } // <b class="conum">(4)</b>
+  return { movies } <i class="conum" data-value="4"></i><b>(4)</b>
 }
 
 export default Home</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>getInitialProps の宣言。async/await として宣言する必要あり</p>
-</li>
-<li>
-<p>props で getInitialProps の return を受け取る</p>
-</li>
-<li>
-<p>getInitialProps で取得した movies を参照</p>
-</li>
-<li>
-<p>この返し方をすると、受け手側では <code>props.movies.id</code> みたいな感じで使える。逆に展開してしまうと <code>props.id</code> といった記述になる</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>getInitialProps の宣言。async/await として宣言する必要あり</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>props で getInitialProps の return を受け取る</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>getInitialProps で取得した movies を参照</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>この返し方をすると、受け手側では <code>props.movies.id</code> みたいな感じで使える。逆に展開してしまうと <code>props.id</code> といった記述になる</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>getInitialProps で受け取る引数の属性は次の通り。
@@ -1503,14 +1593,14 @@ err
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">import Link from 'next/link'
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import Link from 'next/link'
 
 export default function FirstPost() {
   return (
     &lt;&gt;
       &lt;h1&gt;First Post&lt;/h1&gt;
       &lt;h2&gt;
-        &lt;Link href="/"&gt; // <b class="conum">(1)</b>
+        &lt;Link href="/"&gt; <i class="conum" data-value="1"></i><b>(1)</b>
           &lt;a&gt;Back to home&lt;/a&gt;
         &lt;/Link&gt;
       &lt;/h2&gt;
@@ -1520,11 +1610,12 @@ export default function FirstPost() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>a タグを link タグでラップするルール</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>a タグを link タグでラップするルール</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1541,23 +1632,23 @@ Next.jsはAppコンポーネントを使ってページの初期化を行いま�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// pages/_app.js // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// pages/_app.js <i class="conum" data-value="1"></i><b>(1)</b>
 
 import App from 'next/app'
 import Head from 'next/head'
 import Navbar from '../components/navbar'
 import Footer from '../components/footer'
 
-class MovieApp extends App { // <b class="conum">(2)</b>
+class MovieApp extends App { <i class="conum" data-value="2"></i><b>(2)</b>
 
-  static async getInitialProps(appContext) { // <b class="conum">(3)</b>
+  static async getInitialProps(appContext) { <i class="conum" data-value="3"></i><b>(3)</b>
     // Executing getInitialProps of page you are navigated to
-    const appProps = await App.getInitialProps(appContext) // <b class="conum">(4)</b>
-    return { ...appProps } // <b class="conum">(5)</b>
+    const appProps = await App.getInitialProps(appContext) <i class="conum" data-value="4"></i><b>(4)</b>
+    return { ...appProps } <i class="conum" data-value="5"></i><b>(5)</b>
   }
 
   render() {
-    const { Component, pageProps } = this.props // <b class="conum">(6)</b>
+    const { Component, pageProps } = this.props <i class="conum" data-value="6"></i><b>(6)</b>
 
     return (
       &lt;div&gt;
@@ -1567,7 +1658,7 @@ class MovieApp extends App { // <b class="conum">(2)</b>
         &lt;/Head&gt;
         &lt;Navbar /&gt;
         &lt;div className="base-page"&gt;
-          &lt;Component {...pageProps} /&gt; // <b class="conum">(7)</b>
+          &lt;Component {...pageProps} /&gt; <i class="conum" data-value="7"></i><b>(7)</b>
         &lt;/div&gt;
         // ...略...
       &lt;/div&gt;
@@ -1579,29 +1670,36 @@ export default MovieApp</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>_app.js は命名規約</p>
-</li>
-<li>
-<p>対象 page を呼び出すと、まずこの MovieApp が呼び出される</p>
-</li>
-<li>
-<p>フレームワークより getInitialProps が呼ばれ</p>
-</li>
-<li>
-<p>対象 page の getInitialProps を呼び出す。 appContext はおまじない</p>
-</li>
-<li>
-<p>appProps を展開したオブジェクトを返すと</p>
-</li>
-<li>
-<p>クラス変数の props として参照できる。 Component もおまじないで、対象ページをコンポーネントとして扱っている(？)</p>
-</li>
-<li>
-<p>対象 page をコンポーネントとして呼び出して、 getInitialProps で取得した値を設定する</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>_app.js は命名規約</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>対象 page を呼び出すと、まずこの MovieApp が呼び出される</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>フレームワークより getInitialProps が呼ばれ</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>対象 page の getInitialProps を呼び出す。 appContext はおまじない</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>appProps を展開したオブジェクトを返すと</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>クラス変数の props として参照できる。 Component もおまじないで、対象ページをコンポーネントとして扱っている(？)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>対象 page をコンポーネントとして呼び出して、 getInitialProps で取得した値を設定する</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>わからん。
@@ -1623,13 +1721,13 @@ export default MovieApp</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// pages/movies/[id].js // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// pages/movies/[id].js <i class="conum" data-value="1"></i><b>(1)</b>
 
 import { useRouter } from 'next/router'
 
 const Movie = () =&gt; {
   const router = useRouter()
-  const { id } = router.query // <b class="conum">(2)</b>
+  const { id } = router.query <i class="conum" data-value="2"></i><b>(2)</b>
 
   return (
     &lt;div className="container"&gt;
@@ -1642,14 +1740,16 @@ export default Movie</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>[id].js は命名規則</p>
-</li>
-<li>
-<p>/movies/[id] とした場合の [id] を取得</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>[id].js は命名規則</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>/movies/[id] とした場合の [id] を取得</td>
+</tr>
+</table>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -1661,7 +1761,7 @@ export default Movie</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// 略
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// 略
 &lt;Link href="/movies/[id]" as={`/movies/${movie.id}`}&gt;
   &lt;a&gt;&lt;img className="card-img-top" src={movie.image} alt="" /&gt;&lt;/a&gt;
 &lt;/Link&gt;
@@ -1674,24 +1774,26 @@ export default Movie</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ tree --charset ascii
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ tree --charset ascii
 .
 `-- pages
     `-- movies
         `-- [id]
-            |-- index.js # <b class="conum">(1)</b>
-            `-- edit.js # <b class="conum">(2)</b></code></pre>
+            |-- index.js <i class="conum" data-value="1"></i><b>(1)</b>
+            `-- edit.js <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p><code>/movies/[id]</code> で呼ばれるページ</p>
-</li>
-<li>
-<p><code>/movies/[id]/edit</code> で呼ばれるページ</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>/movies/[id]</code> で呼ばれるページ</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>/movies/[id]/edit</code> で呼ばれるページ</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1708,11 +1810,11 @@ export default Movie</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// FancyBorder.jsx
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// FancyBorder.jsx
 function FancyBorder(props) {
   return (
-    &lt;div className={'FancyBorder FancyBorder-' + props.color}&gt; // <b class="conum">(1)</b>
-      {props.children} // <b class="conum">(2)</b>
+    &lt;div className={'FancyBorder FancyBorder-' + props.color}&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      {props.children} <i class="conum" data-value="2"></i><b>(2)</b>
     &lt;/div&gt;
   );
 }
@@ -1720,8 +1822,8 @@ function FancyBorder(props) {
 // WelcomeDialog.jsx
 function WelcomeDialog() {
   return (
-    &lt;FancyBorder color="blue"&gt; // <b class="conum">(1)</b>
-      &lt;h1 className="Dialog-title"&gt; // <b class="conum">(2)</b>
+    &lt;FancyBorder color="blue"&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      &lt;h1 className="Dialog-title"&gt; <i class="conum" data-value="2"></i><b>(2)</b>
         Welcome
       &lt;/h1&gt;
       &lt;p className="Dialog-message"&gt;
@@ -1733,14 +1835,16 @@ function WelcomeDialog() {
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>props.color には color="blue" が渡される。</p>
-</li>
-<li>
-<p>props.children には FancyBorder タグ内の要素が渡される。</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>props.color には color="blue" が渡される。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>props.children には FancyBorder タグ内の要素が渡される。</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1759,7 +1863,7 @@ function WelcomeDialog() {
 <table>
 <tr>
 <td class="icon">
-<div class="title">Warning</div>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -1771,9 +1875,9 @@ function WelcomeDialog() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// actions/index.js
-export const createMovie = (movie) =&gt; { // <b class="conum">(1)</b>
-  return new Promise((resolve, reject) =&gt; { // <b class="conum">(2)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// actions/index.js
+export const createMovie = (movie) =&gt; { <i class="conum" data-value="1"></i><b>(1)</b>
+  return new Promise((resolve, reject) =&gt; { <i class="conum" data-value="2"></i><b>(2)</b>
     // Create ID for movie
     MOVIE_DATA.push(movie)
     setTimeout(() =&gt; {
@@ -1788,70 +1892,80 @@ import { createMovie } from '../actions'
 
 const SideMenu = (props) =&gt; {
 
-  const handleCreateMovie = (movie) =&gt; { // <b class="conum">(3)</b>
+  const handleCreateMovie = (movie) =&gt; { <i class="conum" data-value="3"></i><b>(3)</b>
     createMovie(movie).then((movies) =&gt; {
       // Close modal after create
-      console.log(JSON.stringify(movies)) // <b class="conum">(4)</b>
+      console.log(JSON.stringify(movies)) <i class="conum" data-value="4"></i><b>(4)</b>
     })
   }
 
   return (
     &lt;div&gt;
       &lt;Modal hasSubmit={false}&gt;
-        &lt;MovieCreateForm handleFormSubmit={handleCreateMovie} /&gt; // <b class="conum">(5)</b>
+        &lt;MovieCreateForm handleFormSubmit={handleCreateMovie} /&gt; <i class="conum" data-value="5"></i><b>(5)</b>
       &lt;/Modal&gt;
     &lt;/div&gt;
   )
 }
 
 // components/movieCreateForm.js
-const MovieCreateForm = (props) =&gt; { // <b class="conum">(6)</b>
+const MovieCreateForm = (props) =&gt; { <i class="conum" data-value="6"></i><b>(6)</b>
 
-  const submitForm = () =&gt; { // <b class="conum">(8)</b>
-    props.handleFormSubmit({...form}) <b class="conum">(7)</b>
+  const submitForm = () =&gt; { <i class="conum" data-value="8"></i><b>(8)</b>
+    props.handleFormSubmit({...form}) <i class="conum" data-value="7"></i><b>(7)</b>
   }
 
   return (
     &lt;form&gt;
-      &lt;button onClick={submitForm} type="button" className="btn btn-primary"&gt;Create&lt;/button&gt; // <b class="conum">(9)</b> <b class="conum">(10)</b>
+      &lt;button onClick={submitForm} type="button" className="btn btn-primary"&gt;Create&lt;/button&gt; <i class="conum" data-value="9"></i><b>(9)</b> <i class="conum" data-value="10"></i><b>(10)</b>
     &lt;/form&gt;
   )
 }</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>メインロジック</p>
-</li>
-<li>
-<p>非同期で結果を返す</p>
-</li>
-<li>
-<p>メインロジックを呼び出すハンドラA</p>
-</li>
-<li>
-<p>非同期処理の結果を受け取り必要な処理を行う</p>
-</li>
-<li>
-<p>子のコンポーネントへハンドラAを渡す</p>
-</li>
-<li>
-<p>props には親からのハンドラAが含まれる</p>
-</li>
-<li>
-<p>親のハンドラAを呼び出し</p>
-</li>
-<li>
-<p>イベント発火により呼び出されるメソッドB</p>
-</li>
-<li>
-<p>イベント発火の起点となるボタンコントローラー</p>
-</li>
-<li>
-<p>onClick にメソッドBを登録</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>メインロジック</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>非同期で結果を返す</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>メインロジックを呼び出すハンドラA</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>非同期処理の結果を受け取り必要な処理を行う</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>子のコンポーネントへハンドラAを渡す</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>props には親からのハンドラAが含まれる</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>親のハンドラAを呼び出し</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>イベント発火により呼び出されるメソッドB</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>イベント発火の起点となるボタンコントローラー</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="10"></i><b>10</b></td>
+<td>onClick にメソッドBを登録</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1868,7 +1982,7 @@ const MovieCreateForm = (props) =&gt; { // <b class="conum">(6)</b>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const next = require('next')
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const next = require('next')
 const express = require('express');
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -1904,7 +2018,7 @@ app.prepare().then(() =&gt; {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">import axios from 'axios'
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3000'
 
@@ -1920,18 +2034,18 @@ export const getMovies = () =&gt; {
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// ...
-import { useRouter } from 'next/router' // <b class="conum">(1)</b>
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// ...
+import { useRouter } from 'next/router' <i class="conum" data-value="1"></i><b>(1)</b>
 
 // Containment
 const SideMenu = (props) =&gt; {
   // ...
-  const router = useRouter() // <b class="conum">(2)</b>
+  const router = useRouter() <i class="conum" data-value="2"></i><b>(2)</b>
 
   const handleCreateMovie = (movie) =&gt; {
     createMovie(movie).then((movies) =&gt; {
-      modal.closeModal() // <b class="conum">(3)</b>
-      router.push('/')  // <b class="conum">(4)</b>
+      modal.closeModal() <i class="conum" data-value="3"></i><b>(3)</b>
+      router.push('/')  <i class="conum" data-value="4"></i><b>(4)</b>
     })
   }
 
@@ -1944,20 +2058,24 @@ export default SideMenu</code></pre>
 </div>
 </div>
 <div class="colist arabic">
-<ol>
-<li>
-<p>遷移するためのルーティングオブジェクトをインポート</p>
-</li>
-<li>
-<p>ルーティングオブジェクトを取得</p>
-</li>
-<li>
-<p>処理後にダイアログを閉じて</p>
-</li>
-<li>
-<p>トップ画面へ遷移</p>
-</li>
-</ol>
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>遷移するためのルーティングオブジェクトをインポート</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>ルーティングオブジェクトを取得</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>処理後にダイアログを閉じて</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>トップ画面へ遷移</td>
+</tr>
+</table>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -1969,7 +2087,7 @@ useRouterはReactフックであり、クラスでは使用できません。wit
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// ...
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// ...
 import Router from 'next/router'
 
 class EditMovie extends React.Component {
@@ -2007,7 +2125,7 @@ APIルートは、Next.jsでAPIを構築するための簡単なソリューシ�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// pages/api/v1/posts.js
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// pages/api/v1/posts.js
 import axios from 'axios'
 
 export default async (req, res) =&gt; {
@@ -2043,7 +2161,7 @@ Next.jsには環境変数のサポートが組み込まれています。
 <div class="listingblock">
 <div class="title">example: .env</div>
 <div class="content">
-<pre class="highlight"><code>DB_HOST=localhost
+<pre class="highlightjs highlight"><code class="language-none hljs">DB_HOST=localhost
 DB_USER=myuser
 DB_PASS=mypassword</code></pre>
 </div>
@@ -2051,7 +2169,7 @@ DB_PASS=mypassword</code></pre>
 <div class="listingblock">
 <div class="title">example: using getStaticProps</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">export async function getStaticProps() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export async function getStaticProps() {
   const db = await myDB.connect({
     host: process.env.DB_HOST,
     username: process.env.DB_USER,
@@ -2104,6 +2222,153 @@ DB_PASS=mypassword</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_ログインによる制御">ログインによる制御</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ヘッダの制御">ヘッダの制御</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Header = ({user, loading}) =&gt; {
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () =&gt; setIsOpen(!isOpen);
+
+  return (
+    &lt;div&gt;
+      &lt;Navbar
+        className="port-navbar port-default absolute"
+        color="transparent"
+        dark
+        expand="md"&gt;
+        &lt;BsNavBrand /&gt;
+        &lt;NavbarToggler onClick={toggle} /&gt;
+        &lt;Collapse isOpen={isOpen} navbar&gt;
+          // ...略...
+          &lt;Nav navbar&gt;
+            { !loading &amp;&amp;
+              &lt;&gt;
+                { user &amp;&amp; <i class="conum" data-value="1"></i><b>(1)</b>
+                  &lt;NavItem className="port-navbar-item"&gt;
+                    &lt;LogoutLink /&gt;
+                  &lt;/NavItem&gt;
+                }
+                { !user &amp;&amp; <i class="conum" data-value="2"></i><b>(2)</b>
+                  &lt;NavItem className="port-navbar-item"&gt;
+                    &lt;LoginLink /&gt;
+                  &lt;/NavItem&gt;
+                }
+              &lt;/&gt;
+            }
+          &lt;/Nav&gt;
+        &lt;/Collapse&gt;
+      &lt;/Navbar&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>ユーザーがログインしている場合</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>ユーザーがログアウトしている場合</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_secret_なページの制御">secret なページの制御</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Secret = () =&gt; {
+  const { data, loading } = useGetUser(); <i class="conum" data-value="1"></i><b>(1)</b>
+  const router = useRouter();
+
+  if (loading) {
+    return &lt;p&gt;Loading...&lt;/p&gt;
+  }
+
+  if (!data) { <i class="conum" data-value="2"></i><b>(2)</b>
+    // Todo: Improve return
+    router.push('/api/v1/login'); <i class="conum" data-value="3"></i><b>(3)</b>
+    return null;
+  } else { <i class="conum" data-value="4"></i><b>(4)</b>
+    return (
+      &lt;BaseLayout user={data} loading={loading}&gt;
+        &lt;BasePage&gt;
+          &lt;h1&gt;I am Secret Page&lt;/h1&gt;
+        &lt;/BasePage&gt;
+      &lt;/BaseLayout&gt;
+    )
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>ユーザー情報の取得</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>ユーザーのデータがあるかチェック</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>なければ login ページへ遷移</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>あれば JSX を返す</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_redirect_用コンポーネント">redirect 用コンポーネント</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>単純な処理をするためのコンポーネントの例。</p>
+</div>
+<div class="listingblock">
+<div class="title">リダイレクト用のコンポーネント</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+const Redirect = ({to}) =&gt; {
+  const router = useRouter();
+
+  useEffect(() =&gt; {
+    router.push(to);
+  }, [])
+
+  return null;
+}
+
+export default Redirect;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">コンポーネントを使う側</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">  if (!data) {
+    return &lt;Redirect to="/api/v1/login" /&gt;
+  } else {
+    // ...略...
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_memo">memo</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -2141,7 +2406,7 @@ DB_PASS=mypassword</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const name = "JavaScript";
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const name = "JavaScript";
 console.log(`Hello ${name}!`);// =&gt; "Hello JavaScript!"</code></pre>
 </div>
 </div>
@@ -2151,7 +2416,7 @@ console.log(`Hello ${name}!`);// =&gt; "Hello JavaScript!"</code></pre>
 <div class="listingblock">
 <div class="title">省略前</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">export const getMovieById = (id) =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export const getMovieById = (id) =&gt; {
 
   return new Promise((resolve, reject) =&gt; {
     const movieIndex = MOVIE_DATA.findIndex((movie) =&gt; {
@@ -2169,7 +2434,7 @@ console.log(`Hello ${name}!`);// =&gt; "Hello JavaScript!"</code></pre>
 <div class="listingblock">
 <div class="title">省略後</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">export const getMovieById = (id) =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export const getMovieById = (id) =&gt; {
 
   return new Promise((resolve, reject) =&gt; {
     const movieIndex = MOVIE_DATA.findIndex(m =&gt; m.id === id)
@@ -2186,7 +2451,7 @@ console.log(`Hello ${name}!`);// =&gt; "Hello JavaScript!"</code></pre>
 <div class="listingblock">
 <div class="title">省略前</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  const images = movies.map((movie) =&gt; {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">  const images = movies.map((movie) =&gt; {
     return {
       id: `image-${movie.id}`,
       image: movie.image
@@ -2197,7 +2462,7 @@ console.log(`Hello ${name}!`);// =&gt; "Hello JavaScript!"</code></pre>
 <div class="listingblock">
 <div class="title">省略後</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  const images = movies.map(movie =&gt; ({
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">  const images = movies.map(movie =&gt; ({
       id: `image-${movie.id}`,
       image: movie.image }))</code></pre>
 </div>
@@ -2215,7 +2480,7 @@ Array#mapは配列の要素を順番にコールバック関数へ渡し、コ�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const array = [1, 2, 3];
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const array = [1, 2, 3];
 // 各要素に10を乗算した新しい配列を作成する
 const newArray = array.map((currentValue, index, array) =&gt; {
     return currentValue * 10;
@@ -2238,7 +2503,7 @@ console.log(array !== newArray); // =&gt; true</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const key = "key-string";
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const key = "key-string";
 // Computed Propertyで`key`の評価結果 "key-string" をプロパティ名に利用
 const obj = {
     [key]: "value"
@@ -2259,7 +2524,7 @@ console.log(obj[key]); // =&gt; "value"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// 値渡し
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// 値渡し
 const objectA = { a: "a" };
 const objectB = { ...objectA };
 objectB.a = "b";
@@ -2269,7 +2534,7 @@ console.log(objectA); // =&gt; { a: "b" }</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// 参照渡し
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// 参照渡し
 const objectA = { a: "a" };
 const objectB = objectA;
 objectB.a = "b";
@@ -2313,11 +2578,41 @@ Math.random() の提供する乱数は、暗号に使用可能な安全性を備
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">const o = {p: 42, q: true};
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const o = {p: 42, q: true};
 const {p: foo, q: bar} = o;
 
 console.log(foo); // 42
 console.log(bar); // true</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_引数の波括弧">引数の波括弧({})</h3>
+<div class="paragraph">
+<p>コンポーネント側の引数の宣言で下記のような宣言をみかける。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Foo = ({bar}) =&gt; {</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>本来は props を用いてやり取りするが、これは props を省略しているだけ。</p>
+</div>
+<div class="listingblock">
+<div class="title">省略する</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Foo = ({bar}) =&gt; {
+  log.console(bar)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">省略しない</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const Foo = (props) =&gt; {
+  log.console(props.bar)
+}</code></pre>
 </div>
 </div>
 </div>
@@ -2326,8 +2621,11 @@ console.log(bar); // true</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-08-28 06:23:16 +0900
+Last updated 2020-12-31 21:08:16 +0900
 </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
 </body>
 </html>

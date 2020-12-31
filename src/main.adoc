@@ -1,4 +1,8 @@
 = Next.js KnowHow
+:toc: left
+:toclevels: 5
+:icons: font
+:source-highlighter: highlightjs
 
 * https://www.udemy.com/course/awesome-nextjs-with-react-and-node-amazing-portfolio-app/[Complete Next.js with React & Node - Beautiful Portfolio App]
 ** https://github.com/Jerga99/movie-app-course[movie-app-course]
@@ -1098,6 +1102,117 @@ export async function getStaticProps() {
 `.env.production`:: 本番環境(`next start`) においてロードされる
 `.env.local`:: すべての環境においてロードされ、その他の設定を上書きできる(バージョン管理対象外とするべき)
 
+== ログインによる制御
+
+=== ヘッダの制御
+
+[source,javascript]
+----
+const Header = ({user, loading}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+
+  return (
+    <div>
+      <Navbar
+        className="port-navbar port-default absolute"
+        color="transparent"
+        dark
+        expand="md">
+        <BsNavBrand />
+        <NavbarToggler onClick={toggle} />
+        <Collapse isOpen={isOpen} navbar>
+          // ...略...
+          <Nav navbar>
+            { !loading &&
+              <>
+                { user && // <1>
+                  <NavItem className="port-navbar-item">
+                    <LogoutLink />
+                  </NavItem>
+                }
+                { !user && // <2>
+                  <NavItem className="port-navbar-item">
+                    <LoginLink />
+                  </NavItem>
+                }
+              </>
+            }
+          </Nav>
+        </Collapse>
+      </Navbar>
+    </div>
+  );
+}
+----
+<1> ユーザーがログインしている場合
+<2> ユーザーがログアウトしている場合
+
+=== secret なページの制御
+
+[source,javascript]
+----
+const Secret = () => {
+  const { data, loading } = useGetUser(); // <1>
+  const router = useRouter();
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
+  if (!data) { // <2>
+    // Todo: Improve return
+    router.push('/api/v1/login'); // <3>
+    return null;
+  } else { // <4>
+    return (
+      <BaseLayout user={data} loading={loading}>
+        <BasePage>
+          <h1>I am Secret Page</h1>
+        </BasePage>
+      </BaseLayout>
+    )
+  }
+}
+----
+<1> ユーザー情報の取得
+<2> ユーザーのデータがあるかチェック
+<3> なければ login ページへ遷移
+<4> あれば JSX を返す
+
+== redirect 用コンポーネント
+
+単純な処理をするためのコンポーネントの例。
+
+[source,javascript]
+.リダイレクト用のコンポーネント
+----
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+const Redirect = ({to}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push(to);
+  }, [])
+
+  return null;
+}
+
+export default Redirect;
+----
+
+[source,javascript]
+.コンポーネントを使う側
+----
+  if (!data) {
+    return <Redirect to="/api/v1/login" />
+  } else {
+    // ...略...
+  }
+}
+----
 
 
 == memo
@@ -1259,4 +1374,31 @@ const {p: foo, q: bar} = o;
 
 console.log(foo); // 42
 console.log(bar); // true
+----
+
+=== 引数の波括弧({})
+
+コンポーネント側の引数の宣言で下記のような宣言をみかける。
+
+[source,javascript]
+----
+const Foo = ({bar}) => {
+----
+
+本来は props を用いてやり取りするが、これは props を省略しているだけ。
+
+[source,javascript]
+.省略する
+----
+const Foo = ({bar}) => {
+  log.console(bar)
+}
+----
+
+[source,javascript]
+.省略しない
+----
+const Foo = (props) => {
+  log.console(props.bar)
+}
 ----
