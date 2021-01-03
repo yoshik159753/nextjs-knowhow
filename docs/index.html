@@ -604,7 +604,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const About = () =&gt; ( <i class="conum" data-value="1"></i><b>(1)</b>
   &lt;h1&gt;Hello About Page&lt;/h1&gt;
-)</code></pre>
+)
+export default About <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -612,6 +613,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>この書き方の場合は内部で変数宣言ができない</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>関数を const 変数に代入して、変数を default export</td>
 </tr>
 </table>
 </div>
@@ -623,7 +628,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
   return (
     &lt;h1&gt;Hello About Page - {message}&lt;/h1&gt;
   )
-}</code></pre>
+}
+export default About</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -632,18 +638,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">const About = () =&gt; {
   const message = 'Hello World'
   return React.createElement('h1', null, 'I am genereting this with createElement')
-}</code></pre>
+}
+export default About</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">unctional component - normal function</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">function About() {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">export default function About() { <i class="conum" data-value="1"></i><b>(1)</b>
   return (
     &lt;h1&gt;Hello About Page&lt;/h1&gt;
   )
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>関数を直接 default export</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>functional component の使いどころは次のようなケース。</p>
@@ -2621,7 +2636,7 @@ console.log(bar); // true</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-31 21:08:16 +0900
+Last updated 2021-01-03 22:35:19 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

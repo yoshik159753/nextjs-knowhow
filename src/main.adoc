@@ -76,8 +76,10 @@ npx create-next-app lean-nextjs-movie-app
 const About = () => ( // <1>
   <h1>Hello About Page</h1>
 )
+export default About // <2>
 ----
 <1> この書き方の場合は内部で変数宣言ができない
+<2> 関数を const 変数に代入して、変数を default export
 
 [source,javascript]
 .functional component - arrow function - 2
@@ -88,6 +90,7 @@ const About = () => {
     <h1>Hello About Page - {message}</h1>
   )
 }
+export default About
 ----
 
 [source,javascript]
@@ -97,17 +100,19 @@ const About = () => {
   const message = 'Hello World'
   return React.createElement('h1', null, 'I am genereting this with createElement')
 }
+export default About
 ----
 
 [source,javascript]
 .unctional component - normal function
 ----
-function About() {
+export default function About() { // <1>
   return (
     <h1>Hello About Page</h1>
   )
 }
 ----
+<1> 関数を直接 default export
 
 functional component の使いどころは次のようなケース。
 
