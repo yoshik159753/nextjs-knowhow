@@ -1219,6 +1219,114 @@ export default Redirect;
 }
 ----
 
+== form 制御の基本
+
+[source,javascript]
+----
+import { useState } from "react"; // <1>
+
+const Register = () => {
+  const [name, setName] = useState(""); // <2>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.table({ name, email, password });
+  };
+
+  return (
+    <>
+      <h1 className="jumbotron text-center bg-primary square">Register</h1>
+
+      <div className="container col-md-4 offset-md-4 pb-5">
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="form-control mb-4 p-4"
+            value={name}
+            onChange={(e) => setName(e.target.value)} // <3>
+            placeholder="Enter name"
+            required
+          />
+
+          // 一部、略
+
+          <button type="submit" className="btn btn-block btn-primary">
+            Submit
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default Register;
+----
+<1> react の useState を宣言
+<2> state を定義
+<3> onChange イベントをトリガに SetXxx で state を更新
+
+== リクエスト時のスピナー
+
+[source,javascript]
+----
+// 一部、略
+
+const Register = () => {
+  const [name, setName] = useState("Ryan");
+  const [email, setEmail] = useState("ryan@gmail.com");
+  const [password, setPassword] = useState("rrrrrr");
+  const [loading, setLoading] = useState(false); // <1>
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true); // <2>
+      const { data } = await axios.post(`http://localhost:8000/api/register`, {
+        name,
+        email,
+        password,
+      });
+      toast("Registration successful. Please login.");
+      setLoading(false); // <3>
+    } catch (err) {
+      toast(err.response.data);
+      setLoading(false); // <3>
+    }
+  };
+
+  return (
+    <>
+      <h1 className="jumbotron text-center bg-primary square">Register</h1>
+
+      <div className="container col-md-4 offset-md-4 pb-5">
+        <form onSubmit={handleSubmit}>
+
+          // 一部、略
+
+          <button
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!name || !email || !password || loading} // <4>
+          >
+            {loading ? <SyncOutlined spin /> : "Submit"} // <5>
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default Register;
+----
+<1> loading 用の state を宣言
+<2> リクエスト投げる直前に loading をオン
+<3> レスポンスを受けたら loading をオフ
+<4> loading がオンの場合はボタンを無効化
+<5> loading がオンの場合はボタンに spiner を表示
+
+include::./contents/react-hooks.adoc[]
 
 == memo
 
@@ -1406,4 +1514,16 @@ const Foo = ({bar}) => {
 const Foo = (props) => {
   log.console(props.bar)
 }
+----
+
+=== console.table
+
+[source,javascript]
+.省略しない
+----
+console.table({ name, email, password });
+// table を使うと key, value の形式で出力される
+// name, value
+// email, value
+// password, value
 ----

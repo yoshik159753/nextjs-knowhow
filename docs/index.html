@@ -478,6 +478,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_redirect_用コンポーネント">redirect 用コンポーネント</a></li>
+<li><a href="#_form_制御の基本">form 制御の基本</a></li>
+<li><a href="#_リクエスト時のスピナー">リクエスト時のスピナー</a></li>
+<li><a href="#_react_hooks">react hooks</a>
+<ul class="sectlevel2">
+<li><a href="#_usestate">useState</a></li>
+<li><a href="#_useeffect_2">useEffect</a></li>
+</ul>
+</li>
 <li><a href="#_memo">memo</a>
 <ul class="sectlevel2">
 <li><a href="#_cmder">cmder</a></li>
@@ -492,6 +500,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_npm_install_save">npm install --save</a></li>
 <li><a href="#_異なる名前を持つ変数への代入">異なる名前を持つ変数への代入</a></li>
 <li><a href="#_引数の波括弧">引数の波括弧({})</a></li>
+<li><a href="#_console_table">console.table</a></li>
 </ul>
 </li>
 </ul>
@@ -2384,6 +2393,299 @@ export default Redirect;</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_form_制御の基本">form 制御の基本</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useState } from "react"; <i class="conum" data-value="1"></i><b>(1)</b>
+
+const Register = () =&gt; {
+  const [name, setName] = useState(""); <i class="conum" data-value="2"></i><b>(2)</b>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) =&gt; {
+    e.preventDefault();
+    console.table({ name, email, password });
+  };
+
+  return (
+    &lt;&gt;
+      &lt;h1 className="jumbotron text-center bg-primary square"&gt;Register&lt;/h1&gt;
+
+      &lt;div className="container col-md-4 offset-md-4 pb-5"&gt;
+        &lt;form onSubmit={handleSubmit}&gt;
+          &lt;input
+            type="text"
+            className="form-control mb-4 p-4"
+            value={name}
+            onChange={(e) =&gt; setName(e.target.value)} <i class="conum" data-value="3"></i><b>(3)</b>
+            placeholder="Enter name"
+            required
+          /&gt;
+
+          // 一部、略
+
+          &lt;button type="submit" className="btn btn-block btn-primary"&gt;
+            Submit
+          &lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+};
+
+export default Register;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>react の useState を宣言</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>state を定義</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>onChange イベントをトリガに SetXxx で state を更新</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_リクエスト時のスピナー">リクエスト時のスピナー</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// 一部、略
+
+const Register = () =&gt; {
+  const [name, setName] = useState("Ryan");
+  const [email, setEmail] = useState("ryan@gmail.com");
+  const [password, setPassword] = useState("rrrrrr");
+  const [loading, setLoading] = useState(false); <i class="conum" data-value="1"></i><b>(1)</b>
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    try {
+      setLoading(true); <i class="conum" data-value="2"></i><b>(2)</b>
+      const { data } = await axios.post(`http://localhost:8000/api/register`, {
+        name,
+        email,
+        password,
+      });
+      toast("Registration successful. Please login.");
+      setLoading(false); <i class="conum" data-value="3"></i><b>(3)</b>
+    } catch (err) {
+      toast(err.response.data);
+      setLoading(false); <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+  };
+
+  return (
+    &lt;&gt;
+      &lt;h1 className="jumbotron text-center bg-primary square"&gt;Register&lt;/h1&gt;
+
+      &lt;div className="container col-md-4 offset-md-4 pb-5"&gt;
+        &lt;form onSubmit={handleSubmit}&gt;
+
+          // 一部、略
+
+          &lt;button
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!name || !email || !password || loading} <i class="conum" data-value="4"></i><b>(4)</b>
+          &gt;
+            {loading ? &lt;SyncOutlined spin /&gt; : "Submit"} <i class="conum" data-value="5"></i><b>(5)</b>
+          &lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+};
+
+export default Register;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>loading 用の state を宣言</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>リクエスト投げる直前に loading をオン</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>レスポンスを受けたら loading をオフ</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>loading がオンの場合はボタンを無効化</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>loading がオンの場合はボタンに spiner を表示</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_react_hooks">react hooks</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>要するにフックとは？</p>
+</div>
+<div class="paragraph">
+<p>フックとは、関数コンポーネントに state やライフサイクルといった React の機能を “接続する (hook into)” ための関数です。
+フックは React をクラスなしに使うための機能ですので、クラス内では機能しません。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-overview.html">フック早わかり</a></p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>フックとは何？
+フックとは React の機能に「接続 (hook into)」するための特別な関数です。
+例えば useState によって React の state の機能を関数コンポーネントに追加できます。</p>
+</div>
+<div class="paragraph">
+<p>フックをいつ使うべき？
+関数コンポーネントを書いていて state が必要だと気付いた場合、これまではコンポーネントをクラスに変換する必要がありました。
+今後は、既に書いた関数コンポーネントの中でフックを使うことができます。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-state.html">ステートフックの利用法</a></p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>フックを利用することで、ライフサイクルメソッドの場合は分離して書かざるを得なかったコンポーネント内の副作用を、関連する部分（リソースの購読とその解除、など）同士で整理して記載することが可能になります。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-overview.html">フック早わかり</a></p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>state を用いたロジックをコンポーネント間で再利用したいことがあります。
+(一部、略)
+カスタムフックを利用することで、同様のことが、ツリー内のコンポーネントを増やすことなく行えるようになります。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-overview.html">フック早わかり</a></p>
+</div>
+</blockquote>
+</div>
+<div class="sect2">
+<h3 id="_usestate">useState</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>通常、関数が終了すると変数は『消えて』しまいますが、state 変数は React によって保持されます。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-state.html">ステートフックの利用法</a></p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>useState は何を返すのか？
+現在の state と、それを更新するための関数とを、ペアにして返します。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-state.html">ステートフックの利用法</a></p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_useeffect_2">useEffect</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>データの取得、購読 (subscription) の設定、あるいは React コンポーネント内の DOM の手動での変更、といったものはすべて副作用の例です。</p>
+</div>
+<div class="paragraph">
+<p>(一部、略)</p>
+</div>
+<div class="paragraph">
+<p>ヒント
+React のライフサイクルに馴染みがある場合は、useEffect フックを componentDidMount と componentDidUpdate と componentWillUnmount がまとまったものだと考えることができます。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-effect.html">副作用フックの利用法</a></p>
+</div>
+</blockquote>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">副作用という言葉について</div>
+<div class="paragraph">
+<p>そもそも react は関数型を前提にしているっぽい。
+それはつまり副作用が起こらないということ。
+じゃあ副作用が起こらないとは？というと、状態が変わらない、結果が常に同じ、まわりに影響を与えない、ということ。
+Unix の「一つのことを行い、またそれをうまくやる」という感じ。</p>
+</div>
+<div class="paragraph">
+<p>なので、ここでいう「副作用」とは「描画後に余計なことをする」といったイメージになりそう。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>useEffect は毎回のレンダー後に呼ばれるのか？
+その通りです！ デフォルトでは、副作用関数は初回のレンダー時および毎回の更新時に呼び出されます。
+(一部、略)
+「マウント」と「更新」という観点で考えるのではなく、「レンダーの後」に副作用は起こる、というように考える方が簡単かもしれません。
+React は、副作用が実行される時点では DOM が正しく更新され終わっていることを保証します。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.reactjs.org/docs/hooks-effect.html">副作用フックの利用法</a></p>
+</div>
+</blockquote>
+</div>
+<div class="listingblock">
+<div class="title">副作用のスキップによるパフォーマンス改善</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">useEffect(() =&gt; {
+  document.title = `You clicked ${count} times`;
+}, [count]); // Only re-run the effect if count changes
+
+// 第2引数に配列で値を設定すると react はその値を保持する。
+// そして次のレンダー時に前回に保持した値と今回の値を比較し不一致となった場合に副作用を処理する。</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_memo">memo</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -2631,12 +2933,25 @@ console.log(bar); // true</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_console_table">console.table</h3>
+<div class="listingblock">
+<div class="title">省略しない</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">console.table({ name, email, password });
+// table を使うと key, value の形式で出力される
+// name, value
+// email, value
+// password, value</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-03 22:35:19 +0900
+Last updated 2021-05-31 20:31:48 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

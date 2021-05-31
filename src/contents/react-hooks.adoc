@@ -1,0 +1,103 @@
+== react hooks
+
+[quote]
+____
+要するにフックとは？
+フックとは、関数コンポーネントに state やライフサイクルといった React の機能を “接続する (hook into)” ための関数です。
+フックは React をクラスなしに使うための機能ですので、クラス内では機能しません。
+
+https://ja.reactjs.org/docs/hooks-overview.html[フック早わかり]
+____
+
+[quote]
+____
+フックとは何？
+フックとは React の機能に「接続 (hook into)」するための特別な関数です。
+例えば useState によって React の state の機能を関数コンポーネントに追加できます。
+
+フックをいつ使うべき？
+関数コンポーネントを書いていて state が必要だと気付いた場合、これまではコンポーネントをクラスに変換する必要がありました。
+今後は、既に書いた関数コンポーネントの中でフックを使うことができます。
+
+https://ja.reactjs.org/docs/hooks-state.html[ステートフックの利用法]
+____
+
+[quote]
+____
+フックを利用することで、ライフサイクルメソッドの場合は分離して書かざるを得なかったコンポーネント内の副作用を、関連する部分（リソースの購読とその解除、など）同士で整理して記載することが可能になります。
+
+https://ja.reactjs.org/docs/hooks-overview.html[フック早わかり]
+____
+
+[quote]
+____
+state を用いたロジックをコンポーネント間で再利用したいことがあります。
+(一部、略)
+カスタムフックを利用することで、同様のことが、ツリー内のコンポーネントを増やすことなく行えるようになります。
+
+https://ja.reactjs.org/docs/hooks-overview.html[フック早わかり]
+____
+
+=== useState
+
+[quote]
+____
+通常、関数が終了すると変数は『消えて』しまいますが、state 変数は React によって保持されます。
+
+https://ja.reactjs.org/docs/hooks-state.html[ステートフックの利用法]
+____
+
+[quote]
+____
+useState は何を返すのか？
+現在の state と、それを更新するための関数とを、ペアにして返します。
+
+https://ja.reactjs.org/docs/hooks-state.html[ステートフックの利用法]
+____
+
+=== useEffect
+
+[quote]
+____
+データの取得、購読 (subscription) の設定、あるいは React コンポーネント内の DOM の手動での変更、といったものはすべて副作用の例です。
+
+(一部、略)
+
+ヒント
+React のライフサイクルに馴染みがある場合は、useEffect フックを componentDidMount と componentDidUpdate と componentWillUnmount がまとまったものだと考えることができます。
+
+https://ja.reactjs.org/docs/hooks-effect.html[副作用フックの利用法]
+____
+
+[TIP]
+.副作用という言葉について
+====
+そもそも react は関数型を前提にしているっぽい。
+それはつまり副作用が起こらないということ。
+じゃあ副作用が起こらないとは？というと、状態が変わらない、結果が常に同じ、まわりに影響を与えない、ということ。
+Unix の「一つのことを行い、またそれをうまくやる」という感じ。
+
+なので、ここでいう「副作用」とは「描画後に余計なことをする」といったイメージになりそう。
+====
+
+[quote]
+____
+useEffect は毎回のレンダー後に呼ばれるのか？
+その通りです！ デフォルトでは、副作用関数は初回のレンダー時および毎回の更新時に呼び出されます。
+(一部、略)
+「マウント」と「更新」という観点で考えるのではなく、「レンダーの後」に副作用は起こる、というように考える方が簡単かもしれません。
+React は、副作用が実行される時点では DOM が正しく更新され終わっていることを保証します。
+
+https://ja.reactjs.org/docs/hooks-effect.html[副作用フックの利用法]
+____
+
+[source,javascript]
+.副作用のスキップによるパフォーマンス改善
+----
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, [count]); // Only re-run the effect if count changes
+
+// 第2引数に配列で値を設定すると react はその値を保持する。
+// そして次のレンダー時に前回に保持した値と今回の値を比較し不一致となった場合に副作用を処理する。
+----
