@@ -1,0 +1,107 @@
+@startuml authentication
+
+title POST リクエストのシーケンス
+
+participant ブラウザ as browser
+
+box "フロントエンド(React)" #LightBlue
+participant Framework as fw
+participant ContextProvider as context
+participant _app as app
+participant XxxPage as xxxpage
+end box
+
+participant バックエンド as backend
+database DB as db
+
+== ページ描画 ==
+
+note over browser
+ブラウザは、ログイン時に
+受け取る JWT を cookie に
+保持していることが前提。
+end note
+
+browser -> xxxpage : ページ表示要求
+
+xxxpage -> app : (フレームワークの振る舞い)
+
+app -> context : コンポーネントとして呼び出し
+note over context
+axios のレスポンスが
+認証エラー(401)の際に
+ログアウトを行う割り込みを仕込む。
+(axios.interceptors.response.use)
+end note
+
+note over context
+Side Effect として、 CSRF トークンを
+取得する処理を仕込む。
+end note
+
+app <-- context
+
+xxxpage <-- app
+note over xxxpage
+描画処理。
+end note
+
+note over fw #Pink
+Side Effect 発火。
+end note
+
+fw -> backend : CSRFトークン取得要求
+note right
+バックエンド側では
+CSRF トークンを発行する
+仕組みが必要。
+(Node の express では
+csurf というライブラリ
+が使える)
+end note
+
+fw <-- backend : CSRFトークン取得結果(CSRFトークン)
+
+note over fw
+CSRF トークンを axios の
+リクエストに載せるように設定。
+(axios.defaults.headers["X-CSRF-Token"])
+end note
+
+note over xxxpage #Pink
+Side Effect 処理後。
+end note
+
+browser <-- xxxpage : ページ表示
+
+== POST リクエスト ==
+
+browser -> xxxpage : POST リクエスト(cookie)
+
+xxxpage -> app : (フレームワークの振る舞い)
+
+app -> context : コンポーネントとして呼び出し
+note over context
+ページ描画と同処理。
+end note
+
+app <-- context
+
+xxxpage <-- app
+
+xxxpage -> backend : POST リクエスト(CSRF トークン, cookie, etc...)
+note over backend
+CSRF トークンの検証。
+cookie の検証。
+リクエストを処理。
+end note
+
+xxxpage <-- backend : 結果
+
+note over xxxpage
+結果に応じた描画処理。
+end note
+
+browser <-- xxxpage : ページ表示
+
+@enduml

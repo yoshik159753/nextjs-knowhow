@@ -1,0 +1,136 @@
+== context と reducer hook による Global state
+
+* ref. https://ja.reactjs.org/docs/hooks-reference.html#usecontext[useContext]
+* ref. https://ja.reactjs.org/docs/hooks-reference.html#usereducer[useReducer]
+
+[NOTE]
+====
+ざっくりいうと。
+
+useReducer で状態を管理。また useReducer を使うと状態更新の処理を自前で実装できるので、その実装を useContext を通して各コンポーネントから使用する。
+すると、深くネストしたコンポーネントに対して props による状態渡しをしなくてもよくなる。
+====
+
+[source,text]
+.フォルダ構成(抜粋)
+----
+.
+|-- context
+|   `-- index.js // <1>
+`-- pages
+    |-- _app.js // <2>
+    `-- login.js // <3>
+----
+<1> App 全体に対する context の実装。
+<2> カスタム App によるページの初期化。
+<3> ページ本体(例としてログインページ)。
+
+[source,javascript]
+.pages/login.js (抜粋)
+----
+import { useState, useContext, useEffect } from "react";
+import { Context } from "../context";
+
+const Login = () => {
+  const {
+    state: { user },
+    dispatch,
+  } = useContext(Context); // <1>
+
+  const handleSubmit = async (e) => { // <4>
+    e.preventDefault();
+    try {
+      dispatch({ // <5>
+        type: "LOGIN",
+        payload: data,
+      });
+    } catch (err) {
+    }
+  };
+
+  return (
+    <>
+        <form onSubmit={handleSubmit}> // <3>
+          <button // <2>
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!email || !password || loading}
+          >
+            {loading ? <SyncOutlined spin /> : "Submit"}
+          </button>
+        </form>
+    </>
+  );
+};
+
+export default Login;
+----
+<1> `context` から値(`state` と `dispatch`)を取得。これらの値は `context/index.js` で宣言している。
+<2> アクションボタン。
+<3> submit handler を呼び出し。
+<4> submit の実装。
+<5> 取得した `dispatch` を通して `state` を更新。この `state` は他のコンポーネントでも `useContext` を使うことで取得することができる。`dispatch` の処理は `context/index.js` で実装。
+
+[source,javascript]
+.pages/_app.js (抜粋)
+----
+import { Provider } from "../context";
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <Provider> // <1>
+      <Component {...pageProps} />
+    </Provider>
+  );
+}
+
+export default MyApp;
+----
+<1> `context/index.js` が export している `Porvider` でラップすることで、ここを起点とするすべてのコンポーネントで `context/index.js` が提供する `context` を使用することができる。
+
+[source,javascript]
+.context/index.js (抜粋)
+----
+import { useReducer, createContext, useEffect } from "react";
+
+const intialState = { // <1>
+  user: null,
+};
+
+const Context = createContext(); // <2>
+
+const rootReducer = (state, action) => { // <3>
+  switch (action.type) {
+    case "LOGIN":
+      return { ...state, user: action.payload };
+    case "LOGOUT":
+      return { ...state, user: null };
+    default:
+      return state;
+  }
+};
+
+const Provider = ({ children }) => { // <4>
+  const [state, dispatch] = useReducer(rootReducer, intialState); // <5>
+
+  useEffect(() => {
+    dispatch({ // <6>
+      type: "LOGIN",
+      payload: JSON.parse(window.localStorage.getItem("user")),
+    });
+  }, []);
+
+  return (
+    <Context.Provider value={{ state, dispatch }}>{children}</Context.Provider> // <7>
+  );
+};
+
+export { Context, Provider };
+----
+<1> context 内で管理する状態の初期状態。
+<2> context の生成。
+<3> Reducer の実装。状態を書き換える処理を記載する。 `(state, action) => newState` はお約束。
+<4> Provider の実装。通常のコンポーネントの実装とほぼ同じでよい(?)。
+<5> Reducer の生成。 `state` と `state` を更新するための `dispatch` を取得する。
+<6> `dispatch` を通して `state` を更新。
+<7> `Context.Provider` でラップして `children` を描画する。また `useReducer` で取得した `state, dispatch` を `value` に設定することで、コンポーネント側では `useContext` を通して取得できる。

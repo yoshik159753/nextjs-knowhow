@@ -1,0 +1,11 @@
+== cookie による認証
+
+[plantuml]
+----
+include::./uml/authentication-using-cookie/api-call-sequence.pu[]
+----
+
+[plantuml]
+----
+include::./uml/authentication-using-cookie/authentication-sequence.pu[]
+----

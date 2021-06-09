@@ -1,2 +1,2 @@
 #!/bin/sh
-asciidoctor -D docs -o index.html ./src/main.adoc
+asciidoctor -r asciidoctor-diagram -D docs -o index.html ./src/main.adoc

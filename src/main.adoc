@@ -1328,6 +1328,10 @@ export default Register;
 
 include::./contents/react-hooks.adoc[]
 
+include::./contents/global-state-with-context-api-and-reducer-hook.adoc[]
+
+include::./contents/authentication-using-cookie.adoc[]
+
 == memo
 
 === cmder

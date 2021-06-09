@@ -486,6 +486,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_useeffect_2">useEffect</a></li>
 </ul>
 </li>
+<li><a href="#_context_と_reducer_hook_による_global_state">context と reducer hook による Global state</a></li>
+<li><a href="#_cookie_による認証">cookie による認証</a></li>
 <li><a href="#_memo">memo</a>
 <ul class="sectlevel2">
 <li><a href="#_cmder">cmder</a></li>
@@ -2543,10 +2545,8 @@ export default Register;</code></pre>
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p>要するにフックとは？</p>
-</div>
-<div class="paragraph">
-<p>フックとは、関数コンポーネントに state やライフサイクルといった React の機能を “接続する (hook into)” ための関数です。
+<p>要するにフックとは？
+フックとは、関数コンポーネントに state やライフサイクルといった React の機能を “接続する (hook into)” ための関数です。
 フックは React をクラスなしに使うための機能ですので、クラス内では機能しません。</p>
 </div>
 <div class="paragraph">
@@ -2681,6 +2681,261 @@ React は、副作用が実行される時点では DOM が正しく更新され
 // 第2引数に配列で値を設定すると react はその値を保持する。
 // そして次のレンダー時に前回に保持した値と今回の値を比較し不一致となった場合に副作用を処理する。</code></pre>
 </div>
+</div>
+<div class="listingblock">
+<div class="title">副作用のスキップの使い方</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">// レンダーの度に副作用を処理する場合は第2引数をつけない
+useEffect(() =&gt; {
+  document.title = `You clicked ${count} times`;
+});
+
+// 生成時に副作用を処理し、破棄時にクリーンアップする場合は、第2引数に空配列([])を設定する
+useEffect(() =&gt; {
+  document.title = `You clicked ${count} times`;
+}, []);
+
+// 状態の変更に応じて副作用を処理する場合は、第二引数に変化する対象を設定する
+useEffect(() =&gt; {
+  document.title = `You clicked ${count} times`;
+}, [count]);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_context_と_reducer_hook_による_global_state">context と reducer hook による Global state</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>ref. <a href="https://ja.reactjs.org/docs/hooks-reference.html#usecontext">useContext</a></p>
+</li>
+<li>
+<p>ref. <a href="https://ja.reactjs.org/docs/hooks-reference.html#usereducer">useReducer</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>ざっくりいうと。</p>
+</div>
+<div class="paragraph">
+<p>useReducer で状態を管理。また useReducer を使うと状態更新の処理を自前で実装できるので、その実装を useContext を通して各コンポーネントから使用する。
+すると、深くネストしたコンポーネントに対して props による状態渡しをしなくてもよくなる。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">フォルダ構成(抜粋)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="text" class="language-text hljs">.
+|-- context
+|   `-- index.js <i class="conum" data-value="1"></i><b>(1)</b>
+`-- pages
+    |-- _app.js <i class="conum" data-value="2"></i><b>(2)</b>
+    `-- login.js <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>App 全体に対する context の実装。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>カスタム App によるページの初期化。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>ページ本体(例としてログインページ)。</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">pages/login.js (抜粋)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useState, useContext, useEffect } from "react";
+import { Context } from "../context";
+
+const Login = () =&gt; {
+  const {
+    state: { user },
+    dispatch,
+  } = useContext(Context); <i class="conum" data-value="1"></i><b>(1)</b>
+
+  const handleSubmit = async (e) =&gt; { <i class="conum" data-value="4"></i><b>(4)</b>
+    e.preventDefault();
+    try {
+      dispatch({ <i class="conum" data-value="5"></i><b>(5)</b>
+        type: "LOGIN",
+        payload: data,
+      });
+    } catch (err) {
+    }
+  };
+
+  return (
+    &lt;&gt;
+        &lt;form onSubmit={handleSubmit}&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+          &lt;button <i class="conum" data-value="2"></i><b>(2)</b>
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!email || !password || loading}
+          &gt;
+            {loading ? &lt;SyncOutlined spin /&gt; : "Submit"}
+          &lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/&gt;
+  );
+};
+
+export default Login;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>context</code> から値(<code>state</code> と <code>dispatch</code>)を取得。これらの値は <code>context/index.js</code> で宣言している。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>アクションボタン。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>submit handler を呼び出し。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>submit の実装。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>取得した <code>dispatch</code> を通して <code>state</code> を更新。この <code>state</code> は他のコンポーネントでも <code>useContext</code> を使うことで取得することができる。<code>dispatch</code> の処理は <code>context/index.js</code> で実装。</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">pages/_app.js (抜粋)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { Provider } from "../context";
+
+function MyApp({ Component, pageProps }) {
+  return (
+    &lt;Provider&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+      &lt;Component {...pageProps} /&gt;
+    &lt;/Provider&gt;
+  );
+}
+
+export default MyApp;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>context/index.js</code> が export している <code>Porvider</code> でラップすることで、ここを起点とするすべてのコンポーネントで <code>context/index.js</code> が提供する <code>context</code> を使用することができる。</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">context/index.js (抜粋)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">import { useReducer, createContext, useEffect } from "react";
+
+const intialState = { <i class="conum" data-value="1"></i><b>(1)</b>
+  user: null,
+};
+
+const Context = createContext(); <i class="conum" data-value="2"></i><b>(2)</b>
+
+const rootReducer = (state, action) =&gt; { <i class="conum" data-value="3"></i><b>(3)</b>
+  switch (action.type) {
+    case "LOGIN":
+      return { ...state, user: action.payload };
+    case "LOGOUT":
+      return { ...state, user: null };
+    default:
+      return state;
+  }
+};
+
+const Provider = ({ children }) =&gt; { <i class="conum" data-value="4"></i><b>(4)</b>
+  const [state, dispatch] = useReducer(rootReducer, intialState); <i class="conum" data-value="5"></i><b>(5)</b>
+
+  useEffect(() =&gt; {
+    dispatch({ <i class="conum" data-value="6"></i><b>(6)</b>
+      type: "LOGIN",
+      payload: JSON.parse(window.localStorage.getItem("user")),
+    });
+  }, []);
+
+  return (
+    &lt;Context.Provider value={{ state, dispatch }}&gt;{children}&lt;/Context.Provider&gt; <i class="conum" data-value="7"></i><b>(7)</b>
+  );
+};
+
+export { Context, Provider };</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>context 内で管理する状態の初期状態。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>context の生成。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Reducer の実装。状態を書き換える処理を記載する。 <code>(state, action) &#8658; newState</code> はお約束。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Provider の実装。通常のコンポーネントの実装とほぼ同じでよい(?)。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Reducer の生成。 <code>state</code> と <code>state</code> を更新するための <code>dispatch</code> を取得する。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td><code>dispatch</code> を通して <code>state</code> を更新。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td><code>Context.Provider</code> でラップして <code>children</code> を描画する。また <code>useReducer</code> で取得した <code>state, dispatch</code> を <code>value</code> に設定することで、コンポーネント側では <code>useContext</code> を通して取得できる。</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cookie_による認証">cookie による認証</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="diag-d7fb3379cbbb777fd45d4f38d7c3f049.png" alt="Diagram" width="1212" height="1472">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="diag-11c1c09e2af9f0963277f0228164dd5c.png" alt="Diagram" width="1073" height="886">
 </div>
 </div>
 </div>
@@ -2951,7 +3206,7 @@ console.log(bar); // true</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-31 20:31:48 +0900
+Last updated 2021-06-08 21:46:02 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

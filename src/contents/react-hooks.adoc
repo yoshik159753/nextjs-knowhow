@@ -101,3 +101,22 @@ useEffect(() => {
 // 第2引数に配列で値を設定すると react はその値を保持する。
 // そして次のレンダー時に前回に保持した値と今回の値を比較し不一致となった場合に副作用を処理する。
 ----
+
+[source,javascript]
+.副作用のスキップの使い方
+----
+// レンダーの度に副作用を処理する場合は第2引数をつけない
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+});
+
+// 生成時に副作用を処理し、破棄時にクリーンアップする場合は、第2引数に空配列([])を設定する
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, []);
+
+// 状態の変更に応じて副作用を処理する場合は、第二引数に変化する対象を設定する
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, [count]);
+----
